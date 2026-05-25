@@ -1,0 +1,53 @@
+services:
+  auth:
+    build:
+      context: ./module-auth
+      dockerfile: Dockerfile
+    container_name: mfe-auth
+    ports:
+      - "3001:80"
+    networks:
+      - micro-net
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ./module-dashboard
+      dockerfile: Dockerfile
+    container_name: mfe-dashboard
+    ports:
+      - "3002:80"
+    networks:
+      - micro-net
+    restart: unless-stopped
+
+  profile:
+    build:
+      context: ./module-profile
+      dockerfile: Dockerfile
+    container_name: mfe-profile
+    ports:
+      - "3003:80"
+    networks:
+      - micro-net
+    restart: unless-stopped
+
+  shell:
+    build:
+      context: ./shell-app
+      dockerfile: Dockerfile
+    container_name: mfe-shell
+    ports:
+      - "3000:80"
+    networks:
+      - micro-net
+    depends_on:
+      - auth
+      - dashboard
+      - profile
+    restart: unless-stopped
+
+networks:
+  micro-net:
+    driver: bridge
+    name: micro-frontend-network

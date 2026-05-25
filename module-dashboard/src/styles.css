@@ -1,0 +1,194 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --dash-accent: #6c63ff;
+  --dash-bg: #0b0b10;
+  --dash-card: #14141e;
+  --dash-border: rgba(255,255,255,0.07);
+  --dash-text: #eeeef5;
+  --dash-muted: #7070888;
+  --up-color: #22c55e;
+  --down-color: #ef4444;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--dash-bg);
+  color: var(--dash-text);
+  min-height: 100vh;
+}
+
+.dash-root {
+  min-height: 100vh;
+  padding: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.dash-bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 700px 400px at 70% 10%, rgba(108,99,255,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 400px 300px at 10% 80%, rgba(34,197,94,0.07) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dash-root > * { position: relative; z-index: 1; }
+
+.dash-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.dash-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #22c55e;
+  background: rgba(34,197,94,0.1);
+  border: 1px solid rgba(34,197,94,0.25);
+  border-radius: 100px;
+  padding: 4px 12px;
+  margin-bottom: 0.75rem;
+  display: inline-block;
+}
+
+.dash-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.dash-clock {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255,255,255,0.4);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat-card {
+  background: var(--dash-card);
+  border: 1px solid var(--dash-border);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  animation: fadeIn 0.5s ease both;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stat-card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stat-icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
+.stat-label { font-size: 0.75rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.stat-value { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 0.3rem; }
+.stat-delta { font-size: 0.8rem; font-weight: 500; }
+.stat-delta.up  { color: var(--up-color); }
+.stat-delta.down { color: var(--down-color); }
+
+/* Bottom section */
+.dash-bottom {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .dash-bottom { grid-template-columns: 1fr; }
+}
+
+.chart-wrap, .activity-wrap {
+  background: var(--dash-card);
+  border: 1px solid var(--dash-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.chart-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.25rem;
+}
+
+.chart-year { color: var(--dash-accent); margin-left: 0.4rem; }
+
+/* Bar chart */
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+}
+
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.bar {
+  width: 100%;
+  background: linear-gradient(to top, var(--dash-accent), rgba(108,99,255,0.4));
+  border-radius: 4px 4px 2px 2px;
+  min-height: 4px;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.bar:hover { opacity: 0.8; }
+
+.bar-label {
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.03em;
+}
+
+/* Activity */
+.activity-list { display: flex; flex-direction: column; gap: 0.85rem; }
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.82rem;
+}
+
+.activity-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.activity-text { flex: 1; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.activity-text strong { color: var(--dash-text); font-weight: 500; }
+.activity-time { color: rgba(255,255,255,0.3); font-size: 0.75rem; white-space: nowrap; }

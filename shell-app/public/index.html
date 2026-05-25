@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyApp — Shell</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    // Runtime remote config: can be overridden by environment injection (nginx, runtime script)
+    // Defaults point to localhost dev ports so `npm start` / webpack dev server works out of the box.
+    window.__RUNTIME_REMOTE_CONFIG__ = window.__RUNTIME_REMOTE_CONFIG__ || {
+      auth: 'http://localhost:3001/remoteEntry.js',
+      dashboard: 'http://localhost:3002/remoteEntry.js',
+      profile: 'http://localhost:3003/remoteEntry.js'
+    };
+  </script>
+</body>
+
+</html>
