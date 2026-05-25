@@ -20,7 +20,7 @@ const AVATARS = [
 
 function AccountTab() {
   const [form, setForm] = useState({
-    name: "Priya Sharma",
+    name: "Shreyash Damodar",
     email: "priya@example.com",
     role: "Product Designer",
     bio: "Crafting delightful digital experiences. Based in Mumbai.",
