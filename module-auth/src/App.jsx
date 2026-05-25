@@ -53,9 +53,9 @@ function LoginForm({ onSwitch }) {
             required
           />
         </div>
-        <button type="submit" className="auth-btn" disabled={loading}>
+        {/* <button type="submit" className="auth-btn" disabled={loading}>
           {loading ? <span className="spinner" /> : "Sign in"}
-        </button>
+        </button> */}
       </form>
 
       <p className="auth-switch">

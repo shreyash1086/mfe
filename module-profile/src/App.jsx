@@ -82,17 +82,17 @@ function AccountTab() {
         </div>
       </div>
 
-      {/* <div className="field-group">
+      <div className="field-group">
         <label>Bio</label>
         <textarea name="bio" value={form.bio} onChange={handle} rows={3} />
-      </div> */}
+      </div>
 
-      {/* <div className="save-row">
+      <div className="save-row">
         {saved && <span className="save-msg">✓ Changes saved</span>}
         <button className="save-btn" onClick={save}>
           Save changes
         </button>
-      </div> */}
+      </div>
     </div>
   );
 }
