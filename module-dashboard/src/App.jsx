@@ -83,7 +83,7 @@ export default function DashboardApp() {
       <div className="dash-bottom">
         <BarChart />
 
-        {/* <div className="activity-wrap">
+        <div className="activity-wrap">
           <div className="chart-title">Recent Activity</div>
           <ul className="activity-list">
             {ACTIVITY.map((a, i) => (
@@ -96,7 +96,7 @@ export default function DashboardApp() {
               </li>
             ))}
           </ul>
-        </div> */}
+        </div>
       </div>
     </div>
   );
