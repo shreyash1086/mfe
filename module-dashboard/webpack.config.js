@@ -21,7 +21,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
     ],
   },
@@ -51,8 +51,8 @@ module.exports = {
     host: "0.0.0.0",
     port: 3002,
     historyApiFallback: true,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-    },
+    // headers: {
+    //   "Access-Control-Allow-Origin": "*",
+    // },
   },
 };

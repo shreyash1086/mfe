@@ -1,0 +1,10 @@
+# Module-level ignores for shell-app
+node_modules/
+build/
+dist/
+.env
+.env.*
+npm-debug.log*
+.vscode/
+.DS_Store
+**/remoteEntry.js

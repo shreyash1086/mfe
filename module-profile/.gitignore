@@ -1,0 +1,9 @@
+# Module-level ignores for module-profile
+node_modules/
+dist/
+build/
+.env
+.env.*
+.vscode/
+.DS_Store
+npm-debug.log*

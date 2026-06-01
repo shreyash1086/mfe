@@ -1,0 +1,70 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log
+
+# Build outputs
+dist/
+build/
+**/dist/
+**/build/
+
+# Environment files
+.env
+.env.*
+.env.local
+
+# Logs
+logs/
+*.log
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Mac OS Icon
+ files
+Icon?
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+
+# Misc
+.cache/
+*.tgz
+coverage/
+
+# OneDrive and temp sync files
+~$*
+~*.tmp
+
+# webpack cache
+.cache/webpack
+
+# Generated remoteEntry (module federation) - ignore build outputs
+**/remoteEntry.js
+
+# lock files if you want to keep others
+.pnp.js
+.pnp.cjs
+
+# npm global install logs
+npm-debug.log
+
+# Ignore built public assets (if generated)
+**/public/static/
+
+docker-compose.yml

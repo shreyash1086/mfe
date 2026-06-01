@@ -93,9 +93,9 @@ function ModuleLoader({ name }) {
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 function Sidebar({ isOpen, onClose }) {
   const links = [
-    { to: "/auth", label: "Auth", icon: "🔐", port: "3001" },
-    { to: "/dashboard", label: "Dashboard", icon: "📊", port: "3002" },
-    { to: "/profile", label: "Profile", icon: "👤", port: "3003" },
+    { to: "/dashboard", label: "Dashboard", icon: "📊", },
+    { to: "/auth", label: "Kloud Labs", icon: "🔐",},
+    { to: "/profile", label: "Virtual Machine", icon: "👤", },
   ];
 
   return (
@@ -103,7 +103,7 @@ function Sidebar({ isOpen, onClose }) {
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="sidebar-logo">
           <span className="logo-icon">◈</span>
-          <span className="logo-text">MyApp</span>
+          <span className="logo-text">LabsKraft</span>
         </div>
         <div className="sidebar-label">MODULES</div>
         <nav className="sidebar-nav">
@@ -118,17 +118,16 @@ function Sidebar({ isOpen, onClose }) {
             >
               <span className="nav-icon">{icon}</span>
               <span className="nav-label">{label}</span>
-              <span className="nav-port">:{port}</span>
             </NavLink>
           ))}
         </nav>
-        <div className="sidebar-footer">
+        {/* <div className="sidebar-footer">
           <div className="shell-badge">SHELL · PORT 3000</div>
           <p className="footer-note">
             Each module runs in its own Docker container and is loaded at
             runtime via Webpack Module Federation.
           </p>
-        </div>
+        </div> */}
       </aside>
       {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
     </>
@@ -140,7 +139,9 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
       <div className="shell-root">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
