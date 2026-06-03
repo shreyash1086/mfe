@@ -18,12 +18,32 @@
   <div id="root"></div>
   <script>
     // Runtime remote config: can be overridden by environment injection (nginx, runtime script)
-    // Defaults point to localhost dev ports so `npm start` / webpack dev server works out of the box.
-    window.__RUNTIME_REMOTE_CONFIG__ = window.__RUNTIME_REMOTE_CONFIG__ || {
-      auth: 'http://localhost:3001/remoteEntry.js',
-      dashboard: 'http://localhost:3002/remoteEntry.js',
-      profile: 'http://localhost:3003/remoteEntry.js'
-    };
+    // Smart detection: In Docker, use internal service names; in dev, use localhost ports
+    // Current origin detection: if running on port 3000 (dev), assume localhost ports
+    // If running on port 80 (Docker via nginx), use Docker service names
+    function getRemoteConfig() {
+      const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
+      const isDocker = port === '80' || port === '443';
+
+      if (isDocker) {
+        // Docker environment: use service names from docker-compose
+        // Accessing services on the same Docker network by container name
+        return {
+          cloud_labs: 'http://cloud-labs/remoteEntry.js',
+          dashboard: 'http://dashboard/remoteEntry.js',
+          virtual_machine: 'http://virtual-machine/remoteEntry.js'
+        };
+      } else {
+        // Local dev environment
+        return {
+          cloud_labs: 'http://localhost:3001/remoteEntry.js',
+          dashboard: 'http://localhost:3002/remoteEntry.js',
+          virtual_machine: 'http://localhost:3003/remoteEntry.js'
+        };
+      }
+    }
+
+    window.__RUNTIME_REMOTE_CONFIG__ = window.__RUNTIME_REMOTE_CONFIG__ || getRemoteConfig();
   </script>
 </body>
 

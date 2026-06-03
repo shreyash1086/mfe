@@ -1,9 +1,9 @@
 /**
  * webpack.prod.config.js
- *
- * Production build config for the Shell.
- * Key difference from webpack.config.js (dev):
- *   - Remotes use Docker service names (http://auth, http://dashboard, http://profile)
+      {
+        test: \/\.css$/,
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
  *     instead of localhost ports — containers talk to each other by name on micro-net
  *
  * Usage:
@@ -34,7 +34,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
     ],
   },

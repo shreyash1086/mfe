@@ -1,5 +1,5 @@
 {
-  "name": "module-profile",
+  "name": "module-cloud-labs",
   "version": "1.0.0",
   "scripts": {
     "start": "webpack serve --mode development",
@@ -10,9 +10,7 @@
     "framer-motion": "^12.40.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^5.6.0",
-    "react-router-dom": "^7.15.1",
-    "styled-components": "^6.1.19"
+    "react-router-dom": "^7.15.1"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",

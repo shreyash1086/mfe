@@ -10,7 +10,8 @@ module.exports = {
     publicPath: "auto",
   },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".js", ".jsx", ".mjs"],
+    fullySpecified: false,
   },
   module: {
     rules: [
@@ -21,7 +22,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: ["style-loader", "css-loader", "postcss-loader"],
       },
     ],
   },

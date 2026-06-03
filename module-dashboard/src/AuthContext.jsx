@@ -23,11 +23,19 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isUsingShellBridge, setIsUsingShellBridge] = useState(false);
 
   const checkAuthState = async () => {
+    // Check if shell bridge is available (module running within shell)
+    if (window.__SHELL_AUTH__) {
+      setIsUsingShellBridge(true);
+      setLoading(false);
+      return window.__SHELL_AUTH__.getUserRole();
+    }
+
     try {
-      // Check for Inactivity Timer (Option 2)
-      const lastActivity = localStorage.getItem("lastActivity");
+      // Check for Inactivity Timer
+      const lastActivity = sessionStorage.getItem("lastActivity");
       if (
         lastActivity &&
         Date.now() - parseInt(lastActivity, 10) > 20 * 60 * 1000
@@ -40,18 +48,22 @@ export const AuthProvider = ({ children }) => {
         currentUser = await getCurrentUser();
         session = await fetchAuthSession();
       } catch (cognitoError) {
-        console.warn(
-          "Cognito not configured or offline, using fallback mock user",
-        );
-        const userData = {
-          username: "labs-kraft-demo104",
-          email: "shreyash1086@example.com",
-          cohortId: "labs-kraft",
-          groups: ["trainer"],
-        };
-        setUser(userData);
-        setUserRole("trainer");
-        return "trainer";
+        // Standalone dev mode: use fallback mock user
+        if (process.env.NODE_ENV === "development") {
+          console.warn(
+            "Cognito not configured or offline, using fallback mock user",
+          );
+          const userData = {
+            username: "labs-kraft-demo104",
+            email: "shreyash1086@example.com",
+            cohortId: "labs-kraft",
+            groups: ["trainer"],
+          };
+          setUser(userData);
+          setUserRole("trainer");
+          return "trainer";
+        }
+        throw cognitoError;
       }
 
       // Get user groups from Cognito
@@ -80,14 +92,12 @@ export const AuthProvider = ({ children }) => {
       setUserRole(role);
       return role;
     } catch (error) {
+      console.error("Auth error:", error);
       setUser(null);
       setUserRole(null);
-      if (
-        localStorage.getItem("userPassword") ||
-        localStorage.getItem("lastActivity")
-      ) {
-        localStorage.removeItem("userPassword");
-        localStorage.removeItem("lastActivity");
+      sessionStorage.removeItem("userPassword");
+      sessionStorage.removeItem("lastActivity");
+      if (window.location.pathname !== "/login") {
         window.location.href = "/login";
       }
       return null;
@@ -97,26 +107,42 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    checkAuthState();
-
-    // Listen for Amplify Auth events (like session expiry or force sign-out)
-    const unsubscribe = Hub.listen("auth", ({ payload }) => {
-      const { event } = payload;
-      if (event === "signedOut" || event === "tokenRefresh_failure") {
-        // Wipe local storage completely
-        localStorage.removeItem("userPassword");
-        localStorage.removeItem("lastActivity");
-        setUser(null);
-        setUserRole(null);
-
-        // If it was a forced expiration, we might want to ensure they are on the login page
-        if (window.location.pathname !== "/login") {
-          window.location.href = "/login";
+    // If shell bridge is available, subscribe to its changes instead of checking auth ourselves
+    if (window.__SHELL_AUTH__) {
+      setIsUsingShellBridge(true);
+      const unsubscribe = window.__SHELL_AUTH__.onAuthChange((authState) => {
+        if (authState.isAuthenticated) {
+          setUser({
+            username: authState.username,
+            ...authState.user,
+          });
+          setUserRole(authState.userRole);
+        } else {
+          setUser(null);
+          setUserRole(null);
         }
-      }
-    });
+      });
+      setLoading(false);
+      return unsubscribe;
+    } else {
+      // Standalone mode: use existing auth check
+      checkAuthState();
 
-    return () => unsubscribe();
+      // Listen for Amplify Auth events (like session expiry or force sign-out)
+      const unsubscribe = Hub.listen("auth", ({ payload }) => {
+        const { event } = payload;
+        if (event === "signedOut" || event === "tokenRefresh_failure") {
+          setUser(null);
+          setUserRole(null);
+
+          if (window.location.pathname !== "/login") {
+            window.location.href = "/login";
+          }
+        }
+      });
+
+      return () => unsubscribe();
+    }
   }, []);
 
   const signOut = async () => {

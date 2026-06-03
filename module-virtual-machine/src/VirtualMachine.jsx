@@ -345,7 +345,13 @@ const VmManagement = () => {
 
   // Actions
   const getStoredPassword = () => {
-    return localStorage.getItem("userPassword") || "";
+    // Try shell bridge first (preferred)
+    if (window.__SHELL_AUTH__?.getPassword) {
+      const bridgePassword = window.__SHELL_AUTH__.getPassword();
+      if (bridgePassword) return bridgePassword;
+    }
+    // Fallback to sessionStorage (for standalone dev)
+    return sessionStorage.getItem("userPassword") || "";
   };
 
   const startInstance = async (instanceId, password) => {
@@ -764,7 +770,7 @@ const VmManagement = () => {
 
   if (authLoading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-black">
+      <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-brand-dark">
         <VMLoader text="Authenticating..." />
       </div>
     );
@@ -775,7 +781,7 @@ const VmManagement = () => {
   }
 
   return (
-    <div className="flex flex-col h-full min-h-screen bg-gray-50 dark:bg-black text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500 overflow-y-auto relative hide-scrollbar">
+    <div className="flex flex-col h-full min-h-[calc(100vh-56px)] bg-gray-50 dark:bg-brand-dark text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500 overflow-y-auto relative hide-scrollbar">
       <main className="relative z-10 flex-1 p-2 md:p-6 w-full flex items-stretch justify-stretch">
         <div className="w-full h-full min-h-[calc(100vh-2rem)] flex gap-6 items-stretch">
           {/* Left: Instance List */}
@@ -792,7 +798,7 @@ const VmManagement = () => {
             className="flex-1 min-w-0 w-full"
           >
             {/* Pill Header */}
-            <div className="w-full bg-white dark:bg-[#09090b] rounded-[28px] px-8 py-3 flex items-center shadow-sm border border-gray-100 dark:border-blue-500/10 transition-all hover:shadow-md dark:hover:border-blue-500/30 mb-6 shrink-0">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-8 mt-2 sticky top-4 z-30 bg-white dark:bg-brand-card rounded-2xl p-2 pr-4 shadow-sm mx-2 md:mx-0 border border-gray-100 dark:border-white/5 transition-all shrink-0">
               <div className="flex items-center">
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight leading-none px-4 whitespace-nowrap">
                   Virtual Machine
@@ -805,7 +811,7 @@ const VmManagement = () => {
               <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-white/10">
                 <button
                   onClick={fetchInstances}
-                  className="p-2 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+                  className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
                   title="Refresh Resource"
                 >
                   <span
@@ -817,7 +823,7 @@ const VmManagement = () => {
 
                 <button
                   onClick={toggleTheme}
-                  className="p-2 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+                  className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
                   title="Toggle Theme"
                 >
                   <span className="material-symbols-outlined text-[22px]">
@@ -917,7 +923,7 @@ const VmManagement = () => {
                 transition={{ type: "spring", damping: 25, stiffness: 120 }}
                 className="w-[420px] shrink-0 sticky top-0 h-[calc(100vh-2rem)] flex flex-col"
               >
-                <div className="h-full flex flex-col rounded-[24px] overflow-hidden border border-gray-100 dark:border-white/8 bg-white dark:bg-[#111] shadow-2xl">
+                <div className="h-full flex flex-col rounded-[24px] overflow-hidden border border-gray-100 dark:border-white/8 bg-white dark:bg-brand-card shadow-2xl">
                   {/* Compact Header */}
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100 dark:border-white/8 shrink-0">
                     <OsAvatar osType={selectedInstance.osType} size="lg" />

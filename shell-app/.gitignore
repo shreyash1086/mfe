@@ -8,3 +8,4 @@ npm-debug.log*
 .vscode/
 .DS_Store
 **/remoteEntry.js
+nginx.conf

@@ -9,11 +9,11 @@ A production-ready micro-frontend setup with 3 independent modules, each running
 
 ```
 micro-frontend/
-├── shell-app/          ← Host (port 3000) — loads all modules at runtime
-├── module-auth/        ← Auth module (port 3001) — Login / Register
-├── module-dashboard/   ← Dashboard module (port 3002) — Stats / Charts
-├── module-profile/     ← Profile module (port 3003) — User settings
-└── docker-compose.yml  ← Master orchestrator
+├── shell-app/               ← Host (port 3000) — loads all modules at runtime
+├── module-cloud-labs/       ← Cloud Labs module (port 3001) — Coming Soon / Info
+├── module-dashboard/        ← Dashboard module (port 3002) — Stats / Charts
+├── module-virtual-machine/  ← Virtual Machine module (port 3003) — Provision / RDP
+└── docker-compose.yml       ← Master orchestrator
 ```
 
 ### How Modules Connect
@@ -21,9 +21,9 @@ micro-frontend/
 ```
 Browser → http://localhost:3000 (Shell)
               │
-              ├── fetches → http://localhost:3001/remoteEntry.js  (Auth)
+              ├── fetches → http://localhost:3001/remoteEntry.js  (Cloud Labs)
               ├── fetches → http://localhost:3002/remoteEntry.js  (Dashboard)
-              └── fetches → http://localhost:3003/remoteEntry.js  (Profile)
+              └── fetches → http://localhost:3003/remoteEntry.js  (Virtual Machine)
 ```
 
 Each module **exposes** a React component via `remoteEntry.js`.
@@ -50,16 +50,16 @@ open http://localhost:3000
 Run each module in a separate terminal:
 
 ```bash
-# Terminal 1 — Auth module
-cd module-auth && npm install && npm start
+# Terminal 1 — Cloud Labs module
+cd module-cloud-labs && npm install && npm start
 # → http://localhost:3001
 
 # Terminal 2 — Dashboard module
 cd module-dashboard && npm install && npm start
 # → http://localhost:3002
 
-# Terminal 3 — Profile module
-cd module-profile && npm install && npm start
+# Terminal 3 — Virtual Machine module
+cd module-virtual-machine && npm install && npm start
 # → http://localhost:3003
 
 # Terminal 4 — Shell (start last)
@@ -214,7 +214,7 @@ Each module can:
 ## Project Structure (each module)
 
 ```
-module-auth/
+module-cloud-labs/
 ├── src/
 │   ├── index.js          ← Entry (just: import("./bootstrap"))
 │   ├── bootstrap.js      ← Mounts React (async boundary)
@@ -222,7 +222,7 @@ module-auth/
 │   └── styles.css
 ├── public/
 │   └── index.html
-├── webpack.config.js     ← Module Federation config (exposes AuthApp)
+├── webpack.config.js     ← Module Federation config (exposes CloudLabsApp)
 ├── .babelrc
 ├── Dockerfile
 ├── nginx.conf

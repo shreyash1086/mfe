@@ -1,9 +1,9 @@
 services:
-  auth:
+  cloud-labs:
     build:
-      context: ./module-auth
+      context: ./module-cloud-labs
       dockerfile: Dockerfile
-    container_name: mfe-auth
+    container_name: mfe-cloud-labs
     ports:
       - "3001:80"
     networks:
@@ -21,11 +21,11 @@ services:
       - micro-net
     restart: unless-stopped
 
-  profile:
+  virtual-machine:
     build:
-      context: ./module-profile
+      context: ./module-virtual-machine
       dockerfile: Dockerfile
-    container_name: mfe-profile
+    container_name: mfe-virtual-machine
     ports:
       - "3003:80"
     networks:
@@ -42,9 +42,9 @@ services:
     networks:
       - micro-net
     depends_on:
-      - auth
+      - cloud-labs
       - dashboard
-      - profile
+      - virtual-machine
     restart: unless-stopped
 
 networks:

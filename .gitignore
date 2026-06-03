@@ -68,3 +68,4 @@ npm-debug.log
 **/public/static/
 
 docker-compose.yml
+docker-compose.yml

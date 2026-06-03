@@ -1,3 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Override Tailwind base to fix layout */
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -18,9 +30,7 @@ body {
   font-family: "DM Sans", sans-serif;
   background: var(--shell-bg);
   color: var(--shell-text);
-  min-height: 100vh;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 html {
@@ -30,7 +40,8 @@ html {
 /* Layout */
 .shell-root {
   display: flex;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 /* Sidebar */
@@ -179,7 +190,9 @@ html {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 @media (max-width: 768px) {
@@ -257,7 +270,6 @@ html {
 .content-area {
   flex: 1;
   overflow: auto;
-  height: calc(100vh - 56px);
   display: flex;
   align-items: stretch;
   scrollbar-width: none;
@@ -271,7 +283,6 @@ html {
 
 .remote-host {
   flex: 1;
-  height: calc(100vh - 56px);
   display: flex;
   width: 100%;
   align-items: stretch;
@@ -298,7 +309,7 @@ html {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  height: calc(100vh - 56px);
+  flex: 1;
   color: var(--shell-muted);
   font-size: 0.9rem;
 }
@@ -325,7 +336,7 @@ html {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  height: calc(100vh - 56px);
+  flex: 1;
   padding: 2rem;
   text-align: center;
   max-width: 420px;

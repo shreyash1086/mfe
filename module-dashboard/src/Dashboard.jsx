@@ -237,7 +237,7 @@ function Dashboard() {
         <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-white/10">
           <button
             onClick={fetchDashboardStats}
-            className="p-2 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all"
+            className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
             title="Refresh Stats"
           >
             <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
@@ -245,7 +245,7 @@ function Dashboard() {
 
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center pt-0.5"
+            className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
             title="Toggle Theme"
           >
             <span className="material-symbols-outlined text-[22px]">

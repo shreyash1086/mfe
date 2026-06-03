@@ -11,7 +11,7 @@ function CloudLabs() {
 
   if (authLoading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-black">
+      <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-brand-dark">
         <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
       </div>
     );
@@ -22,7 +22,7 @@ function CloudLabs() {
   }
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-56px)] w-full bg-gray-50 dark:bg-black text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500 relative">
+    <div className="flex flex-col min-h-[calc(100vh-56px)] w-full bg-gray-50 dark:bg-brand-dark text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500 relative">
       <div className="px-6 pt-6 pb-3 w-full flex-1 flex flex-col mx-auto">
         {/* Header Area - Pill Style/Sticky */}
         <div className="flex flex-col md:flex-row items-center justify-between mb-8 mt-2 sticky top-4 z-30 bg-white dark:bg-brand-card rounded-2xl p-2 pr-4 shadow-sm mx-2 md:mx-0 border border-gray-100 dark:border-white/5 transition-all shrink-0">
@@ -38,7 +38,7 @@ function CloudLabs() {
           <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-white/10">
             <button
               onClick={toggleTheme}
-              className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center pt-0.5"
+              className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
               title="Toggle Theme"
             >
               <span className="material-symbols-outlined text-[22px]">

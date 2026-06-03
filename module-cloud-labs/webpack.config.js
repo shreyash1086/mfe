@@ -27,10 +27,10 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "auth", // Unique name for this module
+      name: "cloud_labs", // Unique name for this module
       filename: "remoteEntry.js", // Entry file exposed to shell
       exposes: {
-        "./AuthApp": "./src/App", // What we expose to the outside world
+        "./CloudLabsApp": "./src/App", // What we expose to the outside world
       },
       shared: {
         react: {

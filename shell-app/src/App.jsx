@@ -1,28 +1,18 @@
 import React, { Suspense, useState } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  NavLink,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./styles.css";
-import { loadRemoteComponent, loadRemoteModule } from "./remotes/remoteLoader";
+import { AuthProvider } from "./contexts/AuthContext";
+import Login from "./components/Login";
+import Sidebar from "./components/Sidebar";
+import ProtectedRoute from "./ProtectedRoute";
+import { loadRemoteComponent } from "./remotes/remoteLoader";
 import { getRemoteUrl } from "./config/remoteConfig";
 
-// ─── Remote Module Imports ────────────────────────────────────────────────────
-// These are NOT local files. At runtime, Webpack fetches:
-//   auth/AuthApp       → http://localhost:3001/remoteEntry.js
-//   dashboard/DashboardApp → http://localhost:3002/remoteEntry.js
-//   profile/ProfileApp → http://localhost:3003/remoteEntry.js
-// Each module ships its own React bundle; the shell only loads them on demand.
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Create lazily-loaded remote components using runtime loader + runtime config
-const AuthApp = React.lazy(
+// Remote Module Imports
+const CloudLabsApp = React.lazy(
   loadRemoteComponent({
-    remoteName: "auth",
-    exposedModule: "./AuthApp",
+    remoteName: "cloud_labs",
+    exposedModule: "./CloudLabsApp",
     getRemoteUrl,
   }),
 );
@@ -33,16 +23,15 @@ const DashboardApp = React.lazy(
     getRemoteUrl,
   }),
 );
-const ProfileApp = React.lazy(
+const VirtualMachineApp = React.lazy(
   loadRemoteComponent({
-    remoteName: "profile",
-    exposedModule: "./ProfileApp",
+    remoteName: "virtual_machine",
+    exposedModule: "./VirtualMachineApp",
     getRemoteUrl,
   }),
 );
 
-// ─── Error Boundary ───────────────────────────────────────────────────────────
-// If a remote module is offline, this catches the failure gracefully.
+// Error Boundary
 class RemoteErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
@@ -78,7 +67,7 @@ class RemoteErrorBoundary extends React.Component {
   }
 }
 
-// ─── Loading Fallback ─────────────────────────────────────────────────────────
+// Loading Fallback
 function ModuleLoader({ name }) {
   return (
     <div className="module-loader">
@@ -90,121 +79,11 @@ function ModuleLoader({ name }) {
   );
 }
 
-// ─── Nav ──────────────────────────────────────────────────────────────────────
-function Sidebar({ isOpen, onClose }) {
-  const links = [
-    { to: "/dashboard", label: "Dashboard", icon: "📊", },
-    { to: "/auth", label: "Kloud Labs", icon: "🔐",},
-    { to: "/profile", label: "Virtual Machine", icon: "👤", },
-  ];
-
-  return (
-    <>
-      <aside className={`sidebar ${isOpen ? "open" : ""}`}>
-        <div className="sidebar-logo">
-          <span className="logo-icon">◈</span>
-          <span className="logo-text">LabsKraft</span>
-        </div>
-        <div className="sidebar-label">MODULES</div>
-        <nav className="sidebar-nav">
-          {links.map(({ to, label, icon, port }) => (
-            <NavLink
-              key={to}
-              to={to}
-              onClick={onClose}
-              className={({ isActive }) =>
-                `nav-item ${isActive ? "active" : ""}`
-              }
-            >
-              <span className="nav-icon">{icon}</span>
-              <span className="nav-label">{label}</span>
-            </NavLink>
-          ))}
-        </nav>
-        {/* <div className="sidebar-footer">
-          <div className="shell-badge">SHELL · PORT 3000</div>
-          <p className="footer-note">
-            Each module runs in its own Docker container and is loaded at
-            runtime via Webpack Module Federation.
-          </p>
-        </div> */}
-      </aside>
-      {isOpen && <div className="sidebar-overlay" onClick={onClose} />}
-    </>
-  );
-}
-
-// ─── Shell App ────────────────────────────────────────────────────────────────
-export default function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  return (
-    <BrowserRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
-      <div className="shell-root">
-        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-
-        <div className="shell-main">
-          <header className="topbar">
-            <button className="menu-btn" onClick={() => setSidebarOpen(true)}>
-              ☰
-            </button>
-            <div className="topbar-title">Micro-Frontend Shell</div>
-            <div className="topbar-status">
-              <span className="status-dot" />
-              All modules live
-            </div>
-          </header>
-
-          <main className="content-area">
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route
-                path="/auth"
-                element={
-                  <RemoteWrapper
-                    name="Auth"
-                    remoteName="auth"
-                    component={AuthApp}
-                  />
-                }
-              />
-              <Route
-                path="/dashboard"
-                element={
-                  <RemoteWrapper
-                    name="Dashboard"
-                    remoteName="dashboard"
-                    component={DashboardApp}
-                  />
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <RemoteWrapper
-                    name="Profile"
-                    remoteName="profile"
-                    component={ProfileApp}
-                  />
-                }
-              />
-            </Routes>
-          </main>
-        </div>
-      </div>
-    </BrowserRouter>
-  );
-}
-
-// RemoteWrapper: wraps lazy remote component with error boundary, suspense and retry
+// Remote Wrapper
 function RemoteWrapper({ name, remoteName, component: Component }) {
-  // key is used to force remount on retry
   const [key, setKey] = useState(0);
 
   function handleRetry() {
-    // attempt to remove script so loader will re-fetch; best-effort
     try {
       const url = getRemoteUrl(remoteName);
       const scripts = [...document.scripts];
@@ -220,11 +99,92 @@ function RemoteWrapper({ name, remoteName, component: Component }) {
   return (
     <RemoteErrorBoundary name={name} onRetry={handleRetry}>
       <Suspense fallback={<ModuleLoader name={name} />}>
-        {/* key forces React to re-create lazy component on retry */}
         <div key={key} className="remote-host">
           <Component />
         </div>
       </Suspense>
     </RemoteErrorBoundary>
+  );
+}
+
+// Main App Layout
+function AppLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <div className="shell-root">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="shell-main">
+        <header className="topbar">
+          <button className="menu-btn" onClick={() => setSidebarOpen(true)}>
+            ☰
+          </button>
+          <div className="topbar-title">Micro-Frontend Shell</div>
+          <div className="topbar-status">
+            <span className="status-dot" />
+            All modules live
+          </div>
+        </header>
+
+        <main className="content-area">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Dashboard"
+                    remoteName="dashboard"
+                    component={DashboardApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cloud-labs"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Cloud Labs"
+                    remoteName="cloud_labs"
+                    component={CloudLabsApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/virtual-machine"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Virtual Machine"
+                    remoteName="virtual_machine"
+                    component={VirtualMachineApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </main>
+      </div>
+    </div>
+  );
+}
+
+// Root App
+export default function App() {
+  return (
+    <BrowserRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={<AppLayout />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

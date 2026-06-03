@@ -27,10 +27,10 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "profile", // Unique name for this module
+      name: "virtual_machine", // Unique name for this module
       filename: "remoteEntry.js", // Entry file exposed to shell
       exposes: {
-        "./ProfileApp": "./src/App", // What we expose to the outside world
+        "./VirtualMachineApp": "./src/App", // What we expose to the outside world
       },
       shared: {
         react: {
