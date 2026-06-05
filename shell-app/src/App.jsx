@@ -1,9 +1,12 @@
 import React, { Suspense, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import "sharedDesignSystem/styles";
 import "./styles.css";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 import Login from "./components/Login";
 import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
 import ProtectedRoute from "./ProtectedRoute";
 import { loadRemoteComponent } from "./remotes/remoteLoader";
 import { getRemoteUrl } from "./config/remoteConfig";
@@ -27,6 +30,48 @@ const VirtualMachineApp = React.lazy(
   loadRemoteComponent({
     remoteName: "virtual_machine",
     exposedModule: "./VirtualMachineApp",
+    getRemoteUrl,
+  }),
+);
+const CloudConsoleApp = React.lazy(
+  loadRemoteComponent({
+    remoteName: "cloud_console",
+    exposedModule: "./CloudConsoleApp",
+    getRemoteUrl,
+  }),
+);
+const LoggingApp = React.lazy(
+  loadRemoteComponent({
+    remoteName: "logging",
+    exposedModule: "./LoggingApp",
+    getRemoteUrl,
+  }),
+);
+const CodeEnvironmentApp = React.lazy(
+  loadRemoteComponent({
+    remoteName: "code_environment",
+    exposedModule: "./CodeEnvironmentApp",
+    getRemoteUrl,
+  }),
+);
+const CodeModuleApp = React.lazy(
+  loadRemoteComponent({
+    remoteName: "code_module",
+    exposedModule: "./CodeModuleApp",
+    getRemoteUrl,
+  }),
+);
+const ContentUploadingApp = React.lazy(
+  loadRemoteComponent({
+    remoteName: "content_uploading",
+    exposedModule: "./ContentUploadingApp",
+    getRemoteUrl,
+  }),
+);
+const AssessmentApp = React.lazy(
+  loadRemoteComponent({
+    remoteName: "assessment",
+    exposedModule: "./AssessmentApp",
     getRemoteUrl,
   }),
 );
@@ -112,22 +157,13 @@ function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="shell-root">
+    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-black transition-colors duration-500 relative font-['Poppins',sans-serif]">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="shell-main">
-        <header className="topbar">
-          <button className="menu-btn" onClick={() => setSidebarOpen(true)}>
-            ☰
-          </button>
-          <div className="topbar-title">Micro-Frontend Shell</div>
-          <div className="topbar-status">
-            <span className="status-dot" />
-            All modules live
-          </div>
-        </header>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
+        <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
-        <main className="content-area">
+        <main className="flex-1 overflow-y-auto px-4 md:px-4 pb-8 pt-2 scrollbar-hide">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route
@@ -166,6 +202,78 @@ function AppLayout() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/cloud-console"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Kloud Console"
+                    remoteName="cloud_console"
+                    component={CloudConsoleApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/system-logs"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="System Logs"
+                    remoteName="logging"
+                    component={LoggingApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/code-environment"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Code Environment"
+                    remoteName="code_environment"
+                    component={CodeEnvironmentApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/code-module"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Kode Module"
+                    remoteName="code_module"
+                    component={CodeModuleApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/content-uploading/*"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Content Uploading"
+                    remoteName="content_uploading"
+                    component={ContentUploadingApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessment/*"
+              element={
+                <ProtectedRoute>
+                  <RemoteWrapper
+                    name="Assessment"
+                    remoteName="assessment"
+                    component={AssessmentApp}
+                  />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
       </div>
@@ -180,10 +288,12 @@ export default function App() {
       future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
     >
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/*" element={<AppLayout />} />
-        </Routes>
+        <ThemeProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/*" element={<AppLayout />} />
+          </Routes>
+        </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
   );

@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa";
 import { useTheme } from "./ThemeContext";
 import Breadcrumbs from "./Breadcrumbs";
+import PageHeader from "sharedDesignSystem/PageHeader";
 import VMLoader from "./VMLoader";
 import VMEmptyState from "./VMEmptyState";
 import RDPLoader from "./RDPLoader";
@@ -770,7 +771,7 @@ const VmManagement = () => {
 
   if (authLoading) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-brand-dark">
+      <div className="h-full w-full flex items-center justify-center bg-gray-50 dark:bg-brand-dark">
         <VMLoader text="Authenticating..." />
       </div>
     );
@@ -781,9 +782,9 @@ const VmManagement = () => {
   }
 
   return (
-    <div className="flex flex-col h-full min-h-[calc(100vh-56px)] bg-gray-50 dark:bg-brand-dark text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500 overflow-y-auto relative hide-scrollbar">
+    <div className="flex flex-col h-full bg-gray-50 dark:bg-brand-dark text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500 overflow-y-auto relative hide-scrollbar">
       <main className="relative z-10 flex-1 p-2 md:p-6 w-full flex items-stretch justify-stretch">
-        <div className="w-full h-full min-h-[calc(100vh-2rem)] flex gap-6 items-stretch">
+        <div className="w-full h-full flex gap-6 items-stretch">
           {/* Left: Instance List */}
           <motion.div
             layout
@@ -798,72 +799,44 @@ const VmManagement = () => {
             className="flex-1 min-w-0 w-full"
           >
             {/* Pill Header */}
-            <div className="flex flex-col md:flex-row items-center justify-between mb-8 mt-2 sticky top-4 z-30 bg-white dark:bg-brand-card rounded-2xl p-2 pr-4 shadow-sm mx-2 md:mx-0 border border-gray-100 dark:border-white/5 transition-all shrink-0">
-              <div className="flex items-center">
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight leading-none px-4 whitespace-nowrap">
-                  Virtual Machine
-                </h1>
-                <div className="h-8 w-[1px] bg-gray-100 dark:bg-white/10 mx-2" />
-              </div>
-
-              <div className="flex-1 px-4" />
-
-              <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-white/10">
-                <button
-                  onClick={fetchInstances}
-                  className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
-                  title="Refresh Resource"
-                >
-                  <span
-                    className={`material-symbols-outlined text-[22px] ${loading ? "animate-spin text-blue-500" : ""}`}
-                  >
-                    refresh
-                  </span>
-                </button>
-
-                <button
-                  onClick={toggleTheme}
-                  className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
-                  title="Toggle Theme"
-                >
-                  <span className="material-symbols-outlined text-[22px]">
-                    {darkMode ? "dark_mode" : "light_mode"}
-                  </span>
-                </button>
-
-                <div className="h-8 w-[1px] bg-gray-100 dark:bg-white/10 mx-2" />
-
-                {/* Total Instances Mini Card */}
-                <div className="flex items-center gap-4 px-4">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                      Total VMs
-                    </span>
-                    <span className="text-xl font-bold text-gray-900 dark:text-white leading-none">
-                      {instances.length}
-                    </span>
+            <PageHeader
+              title="Virtual Machine"
+              onRefresh={fetchInstances}
+              loading={loading}
+              actions={
+                <>
+                  {/* Total Instances Mini Card */}
+                  <div className="flex items-center gap-4 px-4">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        Total VMs
+                      </span>
+                      <span className="text-xl font-bold text-gray-900 dark:text-white leading-none">
+                        {instances.length}
+                      </span>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                      <FaServer className="text-blue-500 text-lg" />
+                    </div>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                    <FaServer className="text-blue-500 text-lg" />
-                  </div>
-                </div>
 
-                {/* Active Mini Card */}
-                <div className="flex items-center gap-4 px-4 border-l border-gray-100 dark:border-white/10">
-                  <div className="flex flex-col items-end">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                      Active
-                    </span>
-                    <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 leading-none">
-                      {runningCount}
-                    </span>
+                  {/* Active Mini Card */}
+                  <div className="flex items-center gap-4 px-4 border-l border-gray-100 dark:border-white/10">
+                    <div className="flex flex-col items-end">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                        Active
+                      </span>
+                      <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 leading-none">
+                        {runningCount}
+                      </span>
+                    </div>
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    </div>
                   </div>
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  </div>
-                </div>
-              </div>
-            </div>
+                </>
+              }
+            />
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               {loading && instances.length === 0 ? (
@@ -921,7 +894,7 @@ const VmManagement = () => {
                 animate={{ opacity: 1, x: 0, rotateY: 0 }}
                 exit={{ opacity: 0, x: 50, rotateY: 10 }}
                 transition={{ type: "spring", damping: 25, stiffness: 120 }}
-                className="w-[420px] shrink-0 sticky top-0 h-[calc(100vh-2rem)] flex flex-col"
+                className="w-[420px] shrink-0 sticky top-0 h-full flex flex-col"
               >
                 <div className="h-full flex flex-col rounded-[24px] overflow-hidden border border-gray-100 dark:border-white/8 bg-white dark:bg-brand-card shadow-2xl">
                   {/* Compact Header */}

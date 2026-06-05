@@ -6,39 +6,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MyApp — Shell</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Averia+Serif+Libre:wght@300;400;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <div id="root"></div>
   <script>
     // Runtime remote config: can be overridden by environment injection (nginx, runtime script)
-    // Smart detection: In Docker, use internal service names; in dev, use localhost ports
-    // Current origin detection: if running on port 3000 (dev), assume localhost ports
-    // If running on port 80 (Docker via nginx), use Docker service names
+    // Smart detection: In Docker (port 80/443), use relative paths handled by gateway Nginx.
+    // In dev (port 3000), use localhost port-based URLs.
     function getRemoteConfig() {
-      const port = window.location.port || (window.location.protocol === 'https:' ? '443' : '80');
-      const isDocker = port === '80' || port === '443';
+      const port = window.location.port;
+      const isDocker = port === '80' || port === '443' || port === '';
 
       if (isDocker) {
-        // Docker environment: use service names from docker-compose
-        // Accessing services on the same Docker network by container name
         return {
-          cloud_labs: 'http://cloud-labs/remoteEntry.js',
-          dashboard: 'http://dashboard/remoteEntry.js',
-          virtual_machine: 'http://virtual-machine/remoteEntry.js'
+          design_system:     '/design-system-remote/remoteEntry.js',
+          cloud_labs:        '/cloud-labs-remote/remoteEntry.js',
+          dashboard:         '/dashboard-remote/remoteEntry.js',
+          virtual_machine:   '/virtual-machine-remote/remoteEntry.js',
+          cloud_console:     '/cloud-console-remote/remoteEntry.js',
+          logging:           '/logging-remote/remoteEntry.js',
+          code_environment:  '/code-environment-remote/remoteEntry.js',
+          code_module:       '/code-module-remote/remoteEntry.js',
+          content_uploading: '/content-uploading-remote/remoteEntry.js',
+          assessment:        '/assessment-remote/remoteEntry.js',
         };
       } else {
-        // Local dev environment
         return {
-          cloud_labs: 'http://localhost:3001/remoteEntry.js',
-          dashboard: 'http://localhost:3002/remoteEntry.js',
-          virtual_machine: 'http://localhost:3003/remoteEntry.js'
+          design_system:     'http://localhost:3010/remoteEntry.js',
+          cloud_labs:        'http://localhost:3001/remoteEntry.js',
+          dashboard:         'http://localhost:3002/remoteEntry.js',
+          virtual_machine:   'http://localhost:3003/remoteEntry.js',
+          cloud_console:     'http://localhost:3004/remoteEntry.js',
+          logging:           'http://localhost:3005/remoteEntry.js',
+          code_environment:  'http://localhost:3006/remoteEntry.js',
+          code_module:       'http://localhost:3007/remoteEntry.js',
+          content_uploading: 'http://localhost:3008/remoteEntry.js',
+          assessment:        'http://localhost:3009/remoteEntry.js',
         };
       }
     }

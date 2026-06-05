@@ -1,13 +1,17 @@
+const tokens = require("../shared-design-system/src/tokens");
+
 module.exports = {
   darkMode: "class",
   content: ["./src/**/*.{js,jsx}", "./public/index.html"],
   theme: {
     extend: {
-      colors: {
-        "brand-card": "#111827",
-        "brand-dark": "#08080d",
-      },
+      colors: tokens.colors,
+      fontFamily: tokens.fontFamily,
+      borderRadius: tokens.borderRadius,
+      spacing: tokens.spacing,
+      animation: tokens.animation,
     },
   },
   plugins: [],
 };
+

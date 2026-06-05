@@ -8,6 +8,8 @@ import {
   Activity, Clock, CheckCircle2, AlertCircle, RefreshCw
 } from 'lucide-react';
 import { useTheme } from './ThemeContext';
+import PageHeader from "sharedDesignSystem/PageHeader";
+import Card from "sharedDesignSystem/Card";
 
 const timeAgo = (dateString) => {
   if (!dateString) return 'Just now';
@@ -170,32 +172,26 @@ function Dashboard() {
   // ----- Render Components -----
 
   const StatCard = ({ label, value, icon, bg, trend, trendDir }) => (
-    <div className="bg-white dark:bg-white/5 p-6 rounded-[32px] shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-lg hover:shadow-blue-500/5 hover:border-blue-200 dark:hover:border-blue-500/30 transition-all duration-300 relative overflow-hidden group">
-      {/* Decorative Grid Background */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none transition-opacity duration-500 group-hover:opacity-[0.08]"
-        style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-
-      <div className="relative z-10">
-        <div className="flex justify-between items-start mb-4">
-          <div className={`p-3 rounded-2xl ${bg} transition-transform group-hover:scale-110`}>
-            {icon}
-          </div>
-          <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full ${trendDir === 'up' ? 'text-green-600 bg-green-50 dark:bg-green-900/20' : 'text-red-500 bg-red-50 dark:bg-red-900/20'}`}>
-            {trendDir === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingUp className="w-3 h-3 rotate-180" />}
-            {trend}
-          </div>
+    <Card className="hover:border-brand-accent/20 dark:hover:border-brand-accent/30" accentColor="var(--brand-accent)">
+      <div className="flex justify-between items-start mb-4">
+        <div className={`p-3 rounded-2xl ${bg} transition-transform group-hover:scale-110`}>
+          {icon}
         </div>
-        <div>
-          <p className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-wider mb-1 uppercase">{label}</p>
-          <h3 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{value}</h3>
+        <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full ${trendDir === 'up' ? 'text-green-600 bg-green-50 dark:bg-green-900/20' : 'text-red-500 bg-red-50 dark:bg-red-900/20'}`}>
+          {trendDir === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingUp className="w-3 h-3 rotate-180" />}
+          {trend}
         </div>
       </div>
-    </div>
+      <div>
+        <p className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-wider mb-1 uppercase">{label}</p>
+        <h3 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">{value}</h3>
+      </div>
+    </Card>
   );
 
   const ActivityItem = ({ title, time, type }) => {
     const colorMap = {
-      info: 'bg-blue-500',
+      info: 'bg-brand-accent',
       success: 'bg-green-500',
       warning: 'bg-yellow-500',
       error: 'bg-red-500',
@@ -223,51 +219,22 @@ function Dashboard() {
   // ----- Admin View -----
   const AdminDashboard = () => (
     <div className="flex flex-col h-full gap-4">
-      {/* Header Area - Pill Style/Sticky */}
-      <div className="flex flex-col md:flex-row items-center justify-between mb-8 mt-2 sticky top-4 z-30 bg-white dark:bg-brand-card rounded-2xl p-2 pr-4 shadow-sm mx-2 md:mx-0 border border-gray-100 dark:border-white/5 transition-all shrink-0">
-        <div className="flex items-center">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white tracking-tight leading-none px-4 whitespace-nowrap">
-            Overview
-          </h1>
-          <div className="h-8 w-[1px] bg-gray-100 dark:bg-white/10 mx-2" />
-        </div>
-
-        <div className="flex-1 px-4" />
-
-        <div className="flex items-center gap-3 pl-4 border-l border-gray-100 dark:border-white/10">
-          <button
-            onClick={fetchDashboardStats}
-            className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
-            title="Refresh Stats"
-          >
-            <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
-          </button>
-
-          <button
-            onClick={toggleTheme}
-            className="w-10 h-10 rounded-xl text-gray-400 hover:bg-gray-50 dark:hover:bg-white/5 transition-all flex items-center justify-center"
-            title="Toggle Theme"
-          >
-            <span className="material-symbols-outlined text-[22px]">
-              {theme === 'dark' ? 'dark_mode' : 'light_mode'}
-            </span>
-          </button>
-
-          {userRole === 'admin' && (
-            <>
-              <div className="h-8 w-[1px] bg-gray-100 dark:bg-white/10 mx-2" />
-
-              <button
-                onClick={() => navigate('/create-assessment')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all active:scale-95 whitespace-nowrap"
-              >
-                <Plus className="w-4 h-4" />
-                NEW ASSESSMENT
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      <PageHeader
+        title="Overview"
+        onRefresh={fetchDashboardStats}
+        loading={loading}
+        actions={
+          userRole === 'admin' && (
+            <button
+              onClick={() => navigate('/create-assessment')}
+              className="bg-brand-accent hover:bg-brand-accent-hover text-white px-5 py-2 rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-brand-accent/20 transition-all active:scale-95 whitespace-nowrap"
+            >
+              <Plus className="w-4 h-4" />
+              NEW ASSESSMENT
+            </button>
+          )
+        }
+      />
 
       {/* Stats Row - Smaller Gap */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
@@ -280,80 +247,68 @@ function Dashboard() {
       <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
 
         {/* Platform Activity Chart - Spans 2 Columns */}
-        <div className="lg:col-span-2 bg-white dark:bg-white/5 p-6 rounded-[32px] shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-lg hover:shadow-blue-500/5 hover:border-blue-200 dark:hover:border-blue-500/30 transition-all duration-300 flex flex-col h-full relative overflow-hidden group">
-          {/* Decorative Grid Background */}
-          <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none transition-opacity duration-500 group-hover:opacity-[0.08]"
-            style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-
-          <div className="relative z-10 flex flex-col h-full">
-            <div className="flex justify-between items-center mb-4 shrink-0">
-              <div>
-                <h3 className="font-bold text-lg text-gray-900 dark:text-white">Platform Activity</h3>
-                <p className="text-gray-500 text-xs mt-1">Assessment engagement over the last 7 days</p>
-              </div>
-            </div>
-
-            {/* Bars - Make taller with smaller min-h */}
-            <div className="flex-1 flex items-end justify-between gap-6 px-2 min-h-[150px]">
-              {activity.length > 0 ? (
-                activity.map((act, i) => {
-                  const maxCount = Math.max(...activity.map(a => a.count), 10);
-                  const count = act.count || 0;
-                  const h = (count / maxCount) * 100;
-                  const dateObj = new Date(act.date);
-                  const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-
-                  return (
-                    <div key={i} className="flex-1 flex flex-col items-center gap-3 h-full justify-end">
-                      <div className="relative w-full flex justify-center h-full items-end">
-                        <div
-                          onMouseEnter={() => setHoveredBar(i)}
-                          onMouseLeave={() => setHoveredBar(null)}
-                          className={`w-full max-w-[60px] rounded-t-2xl transition-all duration-700 ease-out hover:opacity-90 cursor-pointer ${count === maxCount ? 'bg-blue-600' : 'bg-blue-300/50 dark:bg-blue-900/40'}`}
-                          style={{ height: `${Math.max(h, 5)}%` }}
-                        >
-                          {hoveredBar === i && (
-                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold py-1 px-2 rounded whitespace-nowrap z-10 pointer-events-none">
-                              {count} Events
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{dayName}</span>
-                    </div>
-                  )
-                })
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400 italic text-sm">
-                  No activity recorded in the last 7 days.
-                </div>
-              )}
+        <Card className="lg:col-span-2 flex flex-col h-full" accentColor="var(--brand-accent)">
+          <div className="flex justify-between items-center mb-4 shrink-0">
+            <div>
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white">Platform Activity</h3>
+              <p className="text-gray-500 text-xs mt-1">Assessment engagement over the last 7 days</p>
             </div>
           </div>
-        </div>
+
+          {/* Bars - Make taller with smaller min-h */}
+          <div className="flex-1 flex items-end justify-between gap-6 px-2 min-h-[150px]">
+            {activity.length > 0 ? (
+              activity.map((act, i) => {
+                const maxCount = Math.max(...activity.map(a => a.count), 10);
+                const count = act.count || 0;
+                const h = (count / maxCount) * 100;
+                const dateObj = new Date(act.date);
+                const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+
+                return (
+                  <div key={i} className="flex-1 flex flex-col items-center gap-3 h-full justify-end">
+                    <div className="relative w-full flex justify-center h-full items-end">
+                      <div
+                        onMouseEnter={() => setHoveredBar(i)}
+                        onMouseLeave={() => setHoveredBar(null)}
+                        className={`w-full max-w-[60px] rounded-t-2xl transition-all duration-700 ease-out hover:opacity-90 cursor-pointer ${count === maxCount ? 'bg-brand-accent' : 'bg-brand-accent/30 dark:bg-brand-accent/10'}`}
+                        style={{ height: `${Math.max(h, 5)}%` }}
+                      >
+                        {hoveredBar === i && (
+                          <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] font-bold py-1 px-2 rounded whitespace-nowrap z-10 pointer-events-none">
+                            {count} Events
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{dayName}</span>
+                  </div>
+                )
+              })
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400 italic text-sm">
+                No activity recorded in the last 7 days.
+              </div>
+            )}
+          </div>
+        </Card>
 
         {/* Recent Activity Feed - Spans 1 Column */}
-        <div className="bg-white dark:bg-white/5 p-6 rounded-[32px] shadow-sm border border-gray-100 dark:border-white/10 hover:shadow-lg hover:shadow-blue-500/5 hover:border-blue-200 dark:hover:border-blue-500/30 transition-all duration-300 flex flex-col h-full overflow-hidden relative group">
-          {/* Decorative Grid Background */}
-          <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none transition-opacity duration-500 group-hover:opacity-[0.08]"
-            style={{ backgroundImage: 'radial-gradient(circle, #3b82f6 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+        <Card className="flex flex-col h-full" accentColor="var(--brand-accent)">
+          <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-4 shrink-0">Recent Activity</h3>
 
-          <div className="relative z-10 flex flex-col h-full overflow-hidden">
-            <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-4 shrink-0">Recent Activity</h3>
-
-            <div className="flex-1 overflow-y-auto scrollbar-hide">
-              {/* Fallback data if no notifications */}
-              {(notifications.length > 0 ? notifications : [
-                { id: 1, title: 'System Upgrade', time: '2 mins ago', type: 'info' },
-                { id: 2, title: 'New Talent Pipeline', time: '15 mins ago', type: 'success' },
-                { id: 3, title: 'Action Required', time: '45 mins ago', type: 'warning' },
-                { id: 4, title: 'Analysis Ready', time: '3 hours ago', type: 'info' },
-              ]).map((notif) => (
-                <ActivityItem key={notif.id} {...notif} time={notif.time.includes('ago') ? notif.time : timeAgo(notif.time)} />
-              ))}
-            </div>
+          <div className="flex-1 overflow-y-auto scrollbar-hide">
+            {/* Fallback data if no notifications */}
+            {(notifications.length > 0 ? notifications : [
+              { id: 1, title: 'System Upgrade', time: '2 mins ago', type: 'info' },
+              { id: 2, title: 'New Talent Pipeline', time: '15 mins ago', type: 'success' },
+              { id: 3, title: 'Action Required', time: '45 mins ago', type: 'warning' },
+              { id: 4, title: 'Analysis Ready', time: '3 hours ago', type: 'info' },
+            ]).map((notif) => (
+              <ActivityItem key={notif.id} {...notif} time={notif.time.includes('ago') ? notif.time : timeAgo(notif.time)} />
+            ))}
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

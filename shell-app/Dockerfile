@@ -3,25 +3,31 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy dependency files first (layer caching — npm install only re-runs if these change)
-COPY package.json ./
-RUN npm install
+# Copy the shared design system folder first (required by the file:../shared-design-system dependency)
+COPY shared-design-system /shared-design-system
+
+# Copy dependency files for shell-app
+COPY shell-app/package.json shell-app/package-lock.json* ./
+RUN npm ci --silent || npm install --silent
+
+# Copy sibling modules for Tailwind CSS content scanning
+COPY module-assessment /module-assessment
+COPY module-cloud-console /module-cloud-console
+COPY module-cloud-labs /module-cloud-labs
+COPY module-code-environment /module-code-environment
+COPY module-code-module /module-code-module
+COPY module-content-uploading /module-content-uploading
+COPY module-dashboard /module-dashboard
+COPY module-logging /module-logging
+COPY module-virtual-machine /module-virtual-machine
 
 # Copy source and build
-COPY . .
-# Use production webpack config (explicit)
+COPY shell-app/ .
 RUN npx webpack --config webpack.prod.config.js --mode production
 
 # ─── Stage 2: Serve ───────────────────────────────────────────────────────────
-# Tiny nginx image — only the built static assets, no Node.js runtime needed
 FROM nginx:alpine
-
-# Copy built assets from Stage 1
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy custom nginx config (handles SPA routing + CORS for Module Federation)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+COPY shell-app/nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]

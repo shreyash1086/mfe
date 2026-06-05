@@ -29,6 +29,20 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "cloud_labs", // Unique name for this module
       filename: "remoteEntry.js", // Entry file exposed to shell
+      remotes: {
+        sharedDesignSystem: `promise new Promise((resolve) => {
+          const name = "sharedDesignSystem";
+          if (window[name]) return resolve(window[name]);
+          const url = (window.__RUNTIME_REMOTE_CONFIG__ && window.__RUNTIME_REMOTE_CONFIG__.design_system) 
+                      || "http://localhost:3010/remoteEntry.js";
+          const script = document.createElement("script");
+          script.src = url;
+          script.async = true;
+          script.onload = () => resolve(window[name]);
+          script.onerror = () => resolve();
+          document.head.appendChild(script);
+        })`,
+      },
       exposes: {
         "./CloudLabsApp": "./src/App", // What we expose to the outside world
       },
@@ -41,6 +55,15 @@ module.exports = {
           singleton: true,
           requiredVersion: "^18.2.0",
         },
+        "react-router": {
+          singleton: true,
+        },
+        "react-router-dom": {
+          singleton: true,
+        },
+        "shared-design-system": {
+          singleton: true,
+        },
       },
     }),
     new HtmlWebpackPlugin({
@@ -50,8 +73,8 @@ module.exports = {
   devServer: {
     port: 3001,
     historyApiFallback: true,
-    // headers: {
-    //   "Access-Control-Allow-Origin": "*", // Allow shell to fetch remoteEntry.js
-    // },
+    headers: {
+      "Access-Control-Allow-Origin": "*", // Allow shell to fetch remoteEntry.js
+    },
   },
 };

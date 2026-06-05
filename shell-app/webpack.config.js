@@ -30,15 +30,31 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "shell",
       // We rely on runtime remote loading (shell reads window.__RUNTIME_REMOTE_CONFIG__)
-      // so build-time hardcoded remotes are intentionally omitted here.
-      remotes: {},
+      // but sharedDesignSystem is imported statically at build-time.
+      remotes: {
+        sharedDesignSystem: `promise new Promise((resolve) => {
+          const name = "sharedDesignSystem";
+          if (window[name]) return resolve(window[name]);
+          const url = (window.__RUNTIME_REMOTE_CONFIG__ && window.__RUNTIME_REMOTE_CONFIG__.design_system) 
+                      || "http://localhost:3010/remoteEntry.js";
+          const script = document.createElement("script");
+          script.src = url;
+          script.async = true;
+          script.onload = () => resolve(window[name]);
+          script.onerror = () => resolve();
+          document.head.appendChild(script);
+        })`,
+      },
       // Relax strict version checks at build time so remotes with minor patch versions
       // can still initialize during development. For production, pin exact versions
       // or enable strictVersion after coordinating releases.
       shared: {
         react: { singleton: true },
         "react-dom": { singleton: true },
+        "react-router": { singleton: true },
         "react-router-dom": { singleton: true },
+        "styled-components": { singleton: true },
+        "shared-design-system": { singleton: true },
       },
     }),
     new HtmlWebpackPlugin({
@@ -50,6 +66,28 @@ module.exports = {
     historyApiFallback: true,
     headers: {
       "Access-Control-Allow-Origin": "*",
+    },
+    proxy: {
+      '/new-content-api': {
+        target: 'https://bd524zjmrldzimglbmmgzkkenq0oxobj.lambda-url.eu-central-1.on.aws',
+        changeOrigin: true,
+        pathRewrite: { '^/new-content-api': '' },
+        secure: false,
+        onProxyRes: function (proxyRes, req, res) {
+          delete proxyRes.headers['access-control-allow-origin'];
+          delete proxyRes.headers['Access-Control-Allow-Origin'];
+        }
+      },
+      '/content-category-api': {
+        target: 'https://pnb45plzoveg6irps5rk24elhu0vvagj.lambda-url.eu-central-1.on.aws',
+        changeOrigin: true,
+        pathRewrite: { '^/content-category-api': '' },
+        secure: false,
+        onProxyRes: function (proxyRes, req, res) {
+          delete proxyRes.headers['access-control-allow-origin'];
+          delete proxyRes.headers['Access-Control-Allow-Origin'];
+        }
+      }
     },
   },
 };
