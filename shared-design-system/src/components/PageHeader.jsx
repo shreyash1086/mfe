@@ -34,20 +34,9 @@ export function PageHeader({
             title="Refresh"
             disabled={loading}
           >
-            <svg
-              className={`w-5 h-5 ${loading ? "animate-spin" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18"
-              />
-            </svg>
+            <span className={`material-symbols-outlined text-[20px] ${loading ? "animate-spin" : ""}`}>
+              refresh
+            </span>
           </button>
         )}
 

@@ -210,10 +210,10 @@ function Sidebar({ isOpen, onClose }) {
                   </span>
                   <button
                     onClick={handleLogoutClick}
-                    className="text-gray-400 hover:text-red-500 transition-all bg-white dark:bg-black/40 p-1 rounded-md shadow-sm border border-gray-100 dark:border-white/5 hover:border-red-100 dark:hover:border-red-500/20 group-hover:bg-white dark:group-hover:bg-[#1a1a1a] flex items-center justify-center"
+                    className="text-gray-400 hover:text-red-500 transition-all bg-white dark:bg-black/40 p-[3px] rounded-md shadow-sm border border-gray-100 dark:border-white/5 hover:border-red-100 dark:hover:border-red-500/20 group-hover:bg-white dark:group-hover:bg-[#1a1a1a] flex items-center justify-center"
                     title="Sign Out"
                   >
-                    <span className="material-symbols-outlined text-[16px]">
+                    <span className="material-symbols-outlined text-[13px]">
                       logout
                     </span>
                   </button>
