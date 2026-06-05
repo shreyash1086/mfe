@@ -81,7 +81,7 @@ function Dashboard() {
     try {
       const isPrivileged = userRole === 'admin';
       const endpoint = isPrivileged
-        ? `${ASSESSMENT_API_BASE_URL}/reports/admin/stats`
+        ? `${ASSESSMENT_API_BASE_URL}/api/reports/admin/stats`
         : `${ASSESSMENT_API_BASE_URL}/api/reports/candidate/stats?username=${user?.username}&cohort=${inferCohortFromUser(user?.username)}`;
 
       const res = await fetch(endpoint);

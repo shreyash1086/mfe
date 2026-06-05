@@ -1,10 +1,13 @@
-import React from 'react';
+import React from "react";
 
 const KCLoader = ({ text = "Initializing Environment...", scale = 1 }) => {
-    return (
-        <div className="flex flex-col items-center justify-center w-full h-full" style={{ transform: `scale(${scale})` }}>
-            <style>
-                {`
+  return (
+    <div
+      className="flex flex-col items-center justify-center w-full h-full"
+      style={{ transform: `scale(${scale})` }}
+    >
+      <style>
+        {`
                 .vm-loader-container {
                     position: relative;
                     width: 120px;
@@ -18,7 +21,7 @@ const KCLoader = ({ text = "Initializing Environment...", scale = 1 }) => {
                     width: 60px;
                     height: 80px;
                     background: #09090b;
-                    border: 2px solid #06b6d4;
+                    border: 2px solid #3563EB;
                     border-radius: 8px;
                     position: relative;
                     box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
@@ -66,8 +69,8 @@ const KCLoader = ({ text = "Initializing Environment...", scale = 1 }) => {
                     height: 100%;
                     border-radius: 50%;
                     border: 2px solid transparent;
-                    border-top-color: #06b6d4;
-                    border-bottom-color: #06b6d4;
+                    border-top-color: #3563EB;
+                    border-bottom-color: #3563EB;
                     animation: kc-spin 3s linear infinite;
                     opacity: 0.5;
                 }
@@ -101,23 +104,23 @@ const KCLoader = ({ text = "Initializing Environment...", scale = 1 }) => {
                     100% { transform: rotate(0deg); }
                 }
                 `}
-            </style>
+      </style>
 
-            <div className="vm-loader-container">
-                <div className="orbit-ring"></div>
-                <div className="orbit-ring"></div>
-                <div className="server-box">
-                    <div className="server-light"></div>
-                    <div className="server-light"></div>
-                    <div className="server-light"></div>
-                </div>
-            </div>
-
-            <span className="font-mono text-sm mt-8 text-brand-accent font-bold tracking-widest uppercase animate-pulse">
-                {text}
-            </span>
+      <div className="vm-loader-container">
+        <div className="orbit-ring"></div>
+        <div className="orbit-ring"></div>
+        <div className="server-box">
+          <div className="server-light"></div>
+          <div className="server-light"></div>
+          <div className="server-light"></div>
         </div>
-    );
+      </div>
+
+      <span className="font-mono text-sm mt-8 text-brand-accent font-bold tracking-widest uppercase animate-pulse">
+        {text}
+      </span>
+    </div>
+  );
 };
 
 export default KCLoader;

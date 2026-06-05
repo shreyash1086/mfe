@@ -11,10 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Averia+Serif+Libre:wght@300;400;700&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-
-<body>
-  <div id="root"></div>
   <script>
     // Runtime remote config: can be overridden by environment injection (nginx, runtime script)
     // Smart detection: In Docker (port 80/443), use relative paths handled by gateway Nginx.
@@ -54,6 +50,10 @@
 
     window.__RUNTIME_REMOTE_CONFIG__ = window.__RUNTIME_REMOTE_CONFIG__ || getRemoteConfig();
   </script>
+</head>
+
+<body>
+  <div id="root"></div>
 </body>
 
 </html>

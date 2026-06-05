@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 const VMEmptyState = () => {
-    return (
-        <div className="flex flex-col items-center justify-center w-full py-20 relative overflow-hidden">
-            <style>
-                {`
+  return (
+    <div className="flex flex-col items-center justify-center w-full py-20 relative overflow-hidden">
+      <style>
+        {`
                 .idle-core-container {
                     position: relative;
                     width: 200px;
@@ -69,7 +69,7 @@ const VMEmptyState = () => {
                     width: 140px;
                     height: 140px;
                     animation: spin-tilt-2 12s linear infinite reverse;
-                    border-right-color: #06b6d4;
+                    border-right-color: #3563EB;
                     border-width: 1px;
                 }
 
@@ -128,33 +128,49 @@ const VMEmptyState = () => {
                     100% { top: 80%; opacity: 0; width: 50px; }
                 }
                 `}
-            </style>
+      </style>
 
-            <div className="idle-core-container">
-                <div className="status-line"></div>
-                <div className="ring-system">
-                    <div className="orbit-ring ring-1"><div className="satellite"></div></div>
-                    <div className="orbit-ring ring-2"></div>
-                    <div className="orbit-ring ring-3"><div className="satellite" style={{ width: '4px', height: '4px', top: '100%', background: '#8b5cf6' }}></div></div>
-                </div>
-                <div className="core-orb"></div>
-            </div>
-
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">System Idle</h3>
-            <p className="text-gray-500 dark:text-gray-400 text-center max-w-sm text-sm leading-relaxed mx-auto px-4">
-                No active instances detected in your environment.
-                <br />
-                <span className="text-xs opacity-70 mt-2 block">Resources are ready for provisioning.</span>
-            </p>
-
-            <button
-                className="mt-8 px-6 py-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 text-xs font-bold uppercase tracking-wider transition-all"
-                onClick={() => window.location.reload()}
-            >
-                Check Again
-            </button>
+      <div className="idle-core-container">
+        <div className="status-line"></div>
+        <div className="ring-system">
+          <div className="orbit-ring ring-1">
+            <div className="satellite"></div>
+          </div>
+          <div className="orbit-ring ring-2"></div>
+          <div className="orbit-ring ring-3">
+            <div
+              className="satellite"
+              style={{
+                width: "4px",
+                height: "4px",
+                top: "100%",
+                background: "#8b5cf6",
+              }}
+            ></div>
+          </div>
         </div>
-    );
+        <div className="core-orb"></div>
+      </div>
+
+      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+        System Idle
+      </h3>
+      <p className="text-gray-500 dark:text-gray-400 text-center max-w-sm text-sm leading-relaxed mx-auto px-4">
+        No active instances detected in your environment.
+        <br />
+        <span className="text-xs opacity-70 mt-2 block">
+          Resources are ready for provisioning.
+        </span>
+      </p>
+
+      <button
+        className="mt-8 px-6 py-2.5 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 text-xs font-bold uppercase tracking-wider transition-all"
+        onClick={() => window.location.reload()}
+      >
+        Check Again
+      </button>
+    </div>
+  );
 };
 
 export default VMEmptyState;

@@ -14,7 +14,7 @@ export function PageHeader({
 
   return (
     <div
-      className={`flex flex-col md:flex-row items-center justify-between mb-8 mt-2 sticky top-4 z-30 bg-white/95 dark:bg-brand-card/95 backdrop-blur-md rounded-2xl p-2 pr-4 shadow-sm border border-gray-150/50 dark:border-white/5 transition-all shrink-0 ${className}`}
+      className={`flex flex-col md:flex-row items-center justify-between mb-8 mt-3 sticky top-3 z-30 bg-white/95 dark:bg-brand-card/95 backdrop-blur-md rounded-2xl p-2 pr-4 shadow-sm border border-gray-150/50 dark:border-white/5 transition-all shrink-0 ${className}`}
       {...props}
     >
       <div className="flex items-center">

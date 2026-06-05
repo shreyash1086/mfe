@@ -163,7 +163,7 @@ function AppLayout() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
         <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
-        <main className="flex-1 overflow-y-auto px-4 md:px-4 pb-8 pt-2 scrollbar-hide">
+        <main className="flex-1 overflow-y-auto px-4 md:px-4 pb-8 pt-3 scrollbar-hide">
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route

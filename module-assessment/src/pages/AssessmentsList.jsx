@@ -421,7 +421,7 @@ function AssessmentsList() {
                   key={cohort}
                   onClick={() => setSelectedCohort(cohort)}
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${selectedCohort === cohort
-                    ? 'bg-brand-accent text-black font-bold shadow-md shadow-brand-accent/25'
+                    ? 'bg-brand-accent text-white font-bold shadow-md shadow-brand-accent/25'
                     : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
                     }`}
                 >
@@ -605,7 +605,7 @@ function AssessmentsList() {
   };
 
   return (
-    <div className="w-full px-6 pb-2 md:pb-4 pt-6 font-['Poppins',sans-serif] bg-gray-50 dark:bg-brand-dark min-h-screen transition-colors duration-300 flex flex-col">
+    <div className="w-full px-6 pb-2 md:pb-4 pt-0 font-['Poppins',sans-serif] bg-gray-50 dark:bg-brand-dark min-h-screen transition-colors duration-300 flex flex-col">
       <div className="w-full flex-1 flex flex-col mx-auto space-y-2">
 
         <PageHeader 
@@ -613,7 +613,7 @@ function AssessmentsList() {
           actions={
             <button
               onClick={() => navigate('/assessment')}
-              className="h-10 px-5 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-750 dark:text-gray-350 text-[11px] font-bold uppercase tracking-wider rounded-xl flex items-center gap-2 transition-all active:scale-95 whitespace-nowrap"
+              className="h-10 px-5 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-750 dark:text-gray-300 text-[11px] font-bold uppercase tracking-wider rounded-xl flex items-center gap-2 transition-all active:scale-95 whitespace-nowrap"
             >
               <span className="material-symbols-outlined text-[18px]">arrow_back</span>
               Back
@@ -728,7 +728,7 @@ function AssessmentsList() {
                               sessionStorage.removeItem(`attempt_id_${assessment.id}`);
                               navigate(`/assessment/${assessment.id}/take`);
                             }}
-                            className="px-5 py-2 rounded-xl bg-brand-accent hover:bg-brand-accent-hover text-black shadow-lg shadow-brand-accent/20 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 text-sm font-bold"
+                            className="px-5 py-2 rounded-xl bg-brand-accent hover:bg-brand-accent-hover text-white shadow-lg shadow-brand-accent/20 transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 text-sm font-bold"
                           >
                             <span className="material-symbols-outlined text-[18px]">play_arrow</span>
                             Start

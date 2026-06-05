@@ -5,7 +5,7 @@ export function Card({
   className = "",
   hoverEffect = true,
   gridBg = true,
-  accentColor = "#06b6d4", // Default cyan highlight
+  accentColor = "#3563EB", // Default cyan highlight
   ...props
 }) {
   return (

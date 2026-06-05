@@ -206,7 +206,7 @@ const CloudConsole = () => {
 
   return (
     <div className="flex flex-col h-full w-full bg-gray-50 dark:bg-brand-dark text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500 relative">
-      <div className="px-6 pt-6 pb-3 w-full flex-1 flex flex-col mx-auto">
+      <div className="px-6 pt-0 pb-3 w-full flex-1 flex flex-col mx-auto">
         <PageHeader title="Kloud Console" />
 
         {/* Cards Grid - full width */}
@@ -229,7 +229,7 @@ const CloudConsole = () => {
                       hoverEffect={!isDisabled}
                       className={`h-[220px] flex flex-col justify-center items-center ${isDisabled ? 'cursor-not-allowed grayscale opacity-60' : ''}`}
                     >
-                      <div className="relative z-10 flex flex-col items-center">
+                      <div className="flex flex-col items-center justify-center h-full">
                         {platform.darkLogo ? (
                           <>
                             <img

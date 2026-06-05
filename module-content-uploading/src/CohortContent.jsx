@@ -280,7 +280,7 @@ function CohortContent() {
 
     return (
         <div className="flex flex-col min-h-screen w-full overflow-y-auto bg-gray-50 dark:bg-black text-gray-800 dark:text-gray-100 font-['Poppins',sans-serif] transition-colors duration-500">
-            <div className="px-6 pt-6 pb-20 w-full flex flex-col mx-auto">
+            <div className="px-6 pt-0 pb-20 w-full flex flex-col mx-auto">
                 <PageHeader 
                     title="Cohort Content" 
                     actions={
@@ -430,8 +430,8 @@ function CohortContent() {
                                                                     ? 'bg-brand-accent border-brand-accent shadow-sm shadow-brand-accent/20'
                                                                     : 'border-gray-300 dark:border-gray-600 group-hover:border-brand-accent'}
                                                      `}>
-                                                                {uploadConfig.cohorts.includes(c.id) && (
-                                                                    <span className="material-symbols-outlined text-[14px] text-black font-bold">check</span>
+                                                                 {uploadConfig.cohorts.includes(c.id) && (
+                                                                    <span className="material-symbols-outlined text-[14px] text-white font-bold">check</span>
                                                                 )}
                                                             </div>
                                                             <span className={`text-sm ${uploadConfig.cohorts.includes(c.id) ? 'text-brand-accent font-semibold' : 'text-gray-700 dark:text-gray-300'}`}>
@@ -522,7 +522,7 @@ function CohortContent() {
                                                                 : 'border-gray-300 dark:border-gray-600 group-hover:border-brand-accent'}
                                                      `}>
                                                             {uploadConfig.categories.includes(cat) && (
-                                                                <span className="material-symbols-outlined text-[14px] text-black font-bold">check</span>
+                                                                <span className="material-symbols-outlined text-[14px] text-white font-bold">check</span>
                                                             )}
                                                         </div>
                                                         <span className={`text-sm ${uploadConfig.categories.includes(cat) ? 'text-brand-accent font-semibold' : 'text-gray-700 dark:text-gray-300'}`}>
@@ -590,7 +590,7 @@ function CohortContent() {
                             <button
                                 onClick={handleUpload}
                                 disabled={uploading}
-                                className="px-5 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-black font-bold text-sm rounded-xl shadow-sm shadow-brand-accent/20 transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                                className="px-5 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-white font-bold text-sm rounded-xl shadow-sm shadow-brand-accent/20 transition-all flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                             >
                                 {uploading ? (
                                     <>

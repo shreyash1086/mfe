@@ -395,7 +395,7 @@ function AssessmentReports() {
     };
 
     return (
-        <div className="w-full px-6 pb-2 md:pb-4 pt-6 font-['Poppins',sans-serif] bg-gray-50 dark:bg-brand-dark min-h-screen transition-colors duration-300 flex flex-col">
+        <div className="w-full px-6 pb-2 md:pb-4 pt-0 font-['Poppins',sans-serif] bg-gray-50 dark:bg-brand-dark min-h-screen transition-colors duration-300 flex flex-col">
             <div className="w-full flex-1 flex flex-col mx-auto space-y-2">
 
                 {/* Header Area - Pill Style */}

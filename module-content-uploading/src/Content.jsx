@@ -538,7 +538,7 @@ function Content() {
                             key={filter}
                             onClick={() => setActiveFilter(filter)}
                             className={`px-6 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${activeFilter === filter
-                                ? 'bg-brand-accent text-black font-bold shadow-md shadow-brand-accent/25'
+                                ? 'bg-brand-accent text-white font-bold shadow-md shadow-brand-accent/25'
                                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/5'
                                 }`}
                         >
@@ -609,7 +609,7 @@ function Content() {
                                     </button>
                                     <Link
                                         to={selectedCohort ? `/content-uploading/cohort-content/${encodeURIComponent(selectedCohort)}` : '/content-uploading/cohort-content'}
-                                        className="flex-1 lg:flex-none px-6 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-black text-sm font-bold rounded-xl shadow-lg shadow-brand-accent/20 transition-all flex items-center justify-center gap-2"
+                                        className="flex-1 lg:flex-none px-6 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-accent/20 transition-all flex items-center justify-center gap-2"
                                     >
                                         <span className="material-symbols-outlined text-[20px]">cloud_upload</span>
                                         Upload Content
@@ -769,7 +769,7 @@ function Content() {
                                             <button
                                                 onClick={handleAddCategory}
                                                 disabled={categoryLoading}
-                                                className="px-6 bg-brand-accent hover:bg-brand-accent-hover text-black text-sm font-bold rounded-xl transition-colors disabled:opacity-50"
+                                                className="px-6 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50"
                                             >
                                                 Add
                                             </button>
@@ -839,7 +839,7 @@ function Content() {
                                     </button>
                                     <button
                                         onClick={() => setCategoryModalOpen(false)}
-                                        className="px-8 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-black text-sm font-bold rounded-xl shadow-lg shadow-brand-accent/20 transition-all"
+                                        className="px-8 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-accent/20 transition-all"
                                     >
                                         Save Changes
                                     </button>
@@ -957,7 +957,7 @@ function Content() {
                             </button>
                             <button
                                 onClick={handleAssignSubmit}
-                                className="px-6 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-black text-sm font-bold rounded-xl shadow-lg shadow-brand-accent/20 transition-all flex items-center gap-2"
+                                className="px-6 py-2.5 bg-brand-accent hover:bg-brand-accent-hover text-white text-sm font-bold rounded-xl shadow-lg shadow-brand-accent/20 transition-all flex items-center gap-2"
                             >
                                 {assigning ? 'Assigning...' : 'Confirm Assignment'}
                             </button>
@@ -993,7 +993,7 @@ function Content() {
                                 )}
                                 <button
                                     onClick={popup.onConfirm}
-                                    className={`px-6 py-2.5 rounded-xl text-white font-medium shadow-lg transition-transform active:scale-95 ${popup.type === 'confirm' ? 'bg-red-600 hover:bg-red-700 shadow-red-500/30' : 'bg-brand-accent hover:bg-brand-accent-hover text-black shadow-brand-accent/25'}`}
+                                    className={`px-6 py-2.5 rounded-xl text-white font-medium shadow-lg transition-transform active:scale-95 ${popup.type === 'confirm' ? 'bg-red-600 hover:bg-red-700 shadow-red-500/30' : 'bg-brand-accent hover:bg-brand-accent-hover text-white shadow-brand-accent/25'}`}
                                 >
                                     {popup.type === 'confirm' ? 'Confirm' : 'Okay'}
                                 </button>
