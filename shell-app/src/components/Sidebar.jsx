@@ -86,14 +86,14 @@ function Sidebar({ isOpen, onClose }) {
     { path: '/assessment', label: 'Assessment', icon: 'admin_panel_settings', color: 'text-green-500 dark:text-green-400', accessKey: 'assessments_access' },
     { path: '/system-logs', label: 'System Logs', icon: 'monitoring', color: 'text-violet-500 dark:text-violet-400', accessKey: 'report_access' },
     // { path: '/code-environment', label: 'Kode Module', icon: 'terminal', color: 'text-red-500 dark:text-red-400', accessKey: 'kode_access' },
-    { path: '/code-module', label: 'Kode ENV', icon: 'terminal', color: 'text-red-500 dark:text-red-400', accessKey: 'kode_access' },
+    // { path: '/code-module', label: 'Kode ENV', icon: 'terminal', color: 'text-red-500 dark:text-red-400', accessKey: 'kode_access' },
   ];
 
   const candidateItems = [
     { path: '/content-uploading', label: 'Content Bank', icon: 'folder_zip', color: 'text-yellow-500 dark:text-yellow-400', accessKey: 'cohorts_access' },
     { path: '/assessment', label: 'Assessment', icon: 'admin_panel_settings', color: 'text-green-500 dark:text-green-400', accessKey: 'assessments_access' },
     // { path: '/code-environment', label: 'Kode ENV', icon: 'terminal', color: 'text-red-500 dark:text-red-400', accessKey: 'kode_access' },
-    { path: '/code-module', label: 'Kode Module', icon: 'terminal', color: 'text-red-500 dark:text-red-400', accessKey: 'kode_access' },
+    // { path: '/code-module', label: 'Kode Module', icon: 'terminal', color: 'text-red-500 dark:text-red-400', accessKey: 'kode_access' },
   ];
 
   let navItems = [...baseNavItems];
