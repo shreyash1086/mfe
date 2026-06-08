@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "./ThemeContext";
 import { useAuth } from "./AuthContext";
@@ -85,6 +85,8 @@ function Logs() {
   // ─── State ───
   const [cohort, setCohort] = useState("loud-vm");
   const [logs, setLogs] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(30);
+  const tableContainerRef = useRef(null);
   const [loading, setLoading] = useState(true); // Initial fetch
   const [isRefreshing, setIsRefreshing] = useState(false); // Silent background refresh
   const [error, setError] = useState(null);
@@ -159,7 +161,21 @@ function Logs() {
 
     try {
       const data = await fetchLogs(cohort);
-      setLogs(data.records || []);
+      const records = (data.records || []).map((record) => {
+        let parsed = null;
+        try {
+          parsed = typeof record.req_res_data === "string"
+            ? JSON.parse(record.req_res_data)
+            : record.req_res_data || {};
+        } catch {
+          parsed = {};
+        }
+        return {
+          ...record,
+          _parsedData: parsed,
+        };
+      });
+      setLogs(records);
       setError(null);
     } catch (err) {
       console.error("[Logs] Fetch error:", err);
@@ -179,24 +195,17 @@ function Logs() {
 
   // ─── Level Inference Helper ───
   const inferLevel = useCallback((log) => {
-    try {
-      const data =
-        typeof log.req_res_data === "string"
-          ? JSON.parse(log.req_res_data)
-          : log.req_res_data || {};
-      if (data?.status >= 500 || data?.error) return "ERROR";
-      if (data?.status >= 400) return "WARN";
-      const apiLower = (log.api_called || "").toLowerCase();
-      if (
-        apiLower.includes("admin") ||
-        apiLower.includes("login") ||
-        apiLower.includes("auth")
-      )
-        return "SECURITY";
-      return "INFO";
-    } catch {
-      return "INFO";
-    }
+    const data = log._parsedData || {};
+    if (data.status >= 500 || data.error) return "ERROR";
+    if (data.status >= 400) return "WARN";
+    const apiLower = (log.api_called || "").toLowerCase();
+    if (
+      apiLower.includes("admin") ||
+      apiLower.includes("login") ||
+      apiLower.includes("auth")
+    )
+      return "SECURITY";
+    return "INFO";
   }, []);
 
   // Close dropdowns on outside click
@@ -268,12 +277,11 @@ function Logs() {
         return false;
       if (searchTerm) {
         const term = searchTerm.toLowerCase();
+        const rawReqRes = typeof log.req_res_data === "string" ? log.req_res_data : "";
         return (
           (log.user_id || "").toLowerCase().includes(term) ||
           (log.api_called || "").toLowerCase().includes(term) ||
-          JSON.stringify(log.req_res_data || "")
-            .toLowerCase()
-            .includes(term)
+          rawReqRes.toLowerCase().includes(term)
         );
       }
       return true;
@@ -296,6 +304,44 @@ function Logs() {
     timeFilter,
     inferLevel,
   ]);
+
+  const displayedLogs = useMemo(() => {
+    return filteredLogs.slice(0, visibleCount);
+  }, [filteredLogs, visibleCount]);
+
+  const handleScroll = useCallback((event) => {
+    let container = event.target;
+    if (!container) return;
+
+    if (container === document) {
+      container = document.documentElement;
+    }
+
+    if (
+      container === tableContainerRef.current ||
+      (container.contains && container.contains(tableContainerRef.current))
+    ) {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      if (scrollHeight - scrollTop - clientHeight < 150) {
+        setVisibleCount((prev) => {
+          if (prev >= filteredLogs.length) return prev;
+          return prev + 30;
+        });
+      }
+    }
+  }, [filteredLogs.length]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, true);
+    return () => window.removeEventListener("scroll", handleScroll, true);
+  }, [handleScroll]);
+
+  useEffect(() => {
+    setVisibleCount(30);
+    if (tableContainerRef.current) {
+      tableContainerRef.current.scrollTop = 0;
+    }
+  }, [searchTerm, apiFilter, levelFilter, sortOrder, timeFilter, cohort]);
 
   // ─── Helpers ───
   const formatDate = (isoString) => {
@@ -815,7 +861,7 @@ function Logs() {
             </div>
 
             {/* Table Area */}
-            <div className="flex-1 overflow-x-auto overflow-y-auto scrollbar-hide relative z-10 w-full min-h-0 bg-white/50 dark:bg-transparent rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm">
+            <div ref={tableContainerRef} className="flex-1 overflow-x-auto overflow-y-auto scrollbar-hide relative z-10 w-full min-h-0 bg-white/50 dark:bg-transparent rounded-2xl border border-gray-100 dark:border-white/5 shadow-sm">
               {loading && logs.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-64 space-y-4">
                   <Loader2 className="w-10 h-10 text-blue-500 animate-spin opacity-70" />
@@ -853,18 +899,9 @@ function Logs() {
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                     <AnimatePresence mode="popLayout">
-                      {filteredLogs.length > 0 ? (
-                        filteredLogs.map((log, index) => {
-                          let parsedData = null;
-                          try {
-                            parsedData =
-                              typeof log.req_res_data === "string"
-                                ? JSON.parse(log.req_res_data)
-                                : log.req_res_data || {};
-                          } catch {
-                            // ignore
-                          }
-
+                      {displayedLogs.length > 0 ? (
+                        displayedLogs.map((log, index) => {
+                          const parsedData = log._parsedData || {};
                           const method =
                             parsedData?.method || log.method || "GET";
                           const levelStr = inferLevel(log);
@@ -897,14 +934,17 @@ function Logs() {
                                   </span>
                                 </div>
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap align-middle">
-                                <div className="flex items-center gap-2 min-w-0">
+                              <td className="px-6 py-4 align-middle">
+                                <div className="flex items-start gap-2 min-w-0">
                                   <span
-                                    className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase flex-shrink-0 ${getMethodColor(method)}`}
+                                    className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase flex-shrink-0 mt-0.5 ${getMethodColor(method)}`}
                                   >
                                     {method}
                                   </span>
-                                  <span className="text-[13px] font-semibold text-slate-600 dark:text-slate-300 truncate block" title={log.api_called}>
+                                  <span
+                                    className="text-[13px] font-semibold text-slate-600 dark:text-slate-300 block truncate group-hover:whitespace-normal group-hover:break-all transition-all max-h-32 overflow-y-auto"
+                                    title={log.api_called}
+                                  >
                                     {log.api_called || "-"}
                                   </span>
                                 </div>
@@ -951,7 +991,11 @@ function Logs() {
           <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
             {cohort ? (
               <>
-                Displaying{" "}
+                Showing{" "}
+                <strong className="text-gray-900 dark:text-white">
+                  {Math.min(visibleCount, filteredLogs.length)}
+                </strong>{" "}
+                of{" "}
                 <strong className="text-gray-900 dark:text-white">
                   {filteredLogs.length}
                 </strong>{" "}
