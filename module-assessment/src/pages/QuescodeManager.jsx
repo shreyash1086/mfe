@@ -81,8 +81,22 @@ function QuescodeManager() {
                 content: quescodeContent
             };
 
-            const ASSESSMENT_MGMT_API_BASE = import.meta.env.VITE_ASSESSMENT_MGMT_API_BASE || 
-                (import.meta.env.DEV ? '/assessment-mgmt-api' : 'https://64whx2c4ir65zu5l2ocpuobnxm0lpzph.lambda-url.ap-south-1.on.aws');
+            const getEnvValue = (name, fallback) => {
+                if (typeof process !== 'undefined' && process.env && process.env[name] !== undefined) {
+                    return process.env[name];
+                }
+                return fallback;
+            };
+
+            const isDevMode = () => {
+                if (typeof process !== 'undefined' && process.env && process.env.NODE_ENV) {
+                    return process.env.NODE_ENV === 'development';
+                }
+                return false;
+            };
+
+            const ASSESSMENT_MGMT_API_BASE = getEnvValue('VITE_ASSESSMENT_MGMT_API_BASE', '') || 
+                (isDevMode() ? '/assessment-mgmt-api' : 'https://64whx2c4ir65zu5l2ocpuobnxm0lpzph.lambda-url.ap-south-1.on.aws');
 
             const response = await fetch(`${ASSESSMENT_MGMT_API_BASE}/`, {
                 method: 'POST',

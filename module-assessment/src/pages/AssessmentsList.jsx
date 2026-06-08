@@ -740,7 +740,7 @@ function AssessmentsList() {
                       {userRole === 'admin' && (
                         <div className="flex items-center gap-2 pl-2 border-l border-gray-200 dark:border-white/10 ml-2">
                           <button
-                            onClick={() => navigate(`/create-assessment?edit=${assessment.id}`)}
+                            onClick={() => navigate(`/assessment/create-assessment?edit=${assessment.id}`)}
                             className="p-2.5 rounded-xl bg-brand-accent/10 text-brand-accent hover:bg-brand-accent/20 transition-colors shadow-sm"
                             title="Edit"
                           >

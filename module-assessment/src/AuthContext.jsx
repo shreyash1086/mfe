@@ -146,6 +146,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const signOut = async () => {
+    if (window.__SHELL_AUTH__) {
+      return window.__SHELL_AUTH__.signOut();
+    }
     try {
       await amplifySignOut();
       localStorage.removeItem("userPassword");
@@ -157,14 +160,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const accessFlags = {
-    labs_access:
-      userRole === "admin" || userRole === "trainer" || userRole === "student",
-    rdp_access:
-      userRole === "admin" || userRole === "trainer" || userRole === "student",
-    assessments_access:
-      userRole === "admin" || userRole === "trainer" || userRole === "student",
-  };
+  const accessFlags = window.__SHELL_AUTH__
+    ? window.__SHELL_AUTH__.getAccessFlags()
+    : {
+        labs_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
+        rdp_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
+        assessments_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
+      };
 
   const value = {
     user,

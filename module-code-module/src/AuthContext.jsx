@@ -168,11 +168,16 @@ export const AuthProvider = ({ children }) => {
   const accessFlags = window.__SHELL_AUTH__
     ? window.__SHELL_AUTH__.getAccessFlags()
     : {
-        aws_access: userRole === "admin" || userRole === "trainer" || userRole === "student",
-        azure_access: userRole === "admin" || userRole === "trainer" || userRole === "student",
-        gcp_access: userRole === "admin" || userRole === "trainer" || userRole === "student",
-        ms_access: userRole === "admin" || userRole === "trainer" || userRole === "student",
-        kode_access: userRole === "admin" || userRole === "trainer" || userRole === "student",
+        aws_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
+        azure_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
+        gcp_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
+        ms_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
+        kode_access:
+          userRole === "admin" || userRole === "trainer" || userRole === "student" || userRole === "candidate",
       };
 
   const value = {

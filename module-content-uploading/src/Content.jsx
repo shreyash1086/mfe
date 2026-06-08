@@ -166,7 +166,9 @@ function Content() {
                         }
                     }
                 }
-                setLoading(false);
+                if (cohortsData.length === 0) {
+                    setLoading(false);
+                }
             } catch (e) {
                 console.error("Failed to load cohorts", e);
                 setLoading(false);
