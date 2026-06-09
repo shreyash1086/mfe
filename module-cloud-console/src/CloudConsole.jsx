@@ -2,35 +2,66 @@ import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "./AuthContext";
 import { fetchAuthSession } from "aws-amplify/auth";
-import { useTheme } from './ThemeContext';
-import KCLoader from './KCLoader';
+import { useTheme } from "./ThemeContext";
+import KCLoader from "./KCLoader";
 import PageHeader from "sharedDesignSystem/PageHeader";
 import Card from "sharedDesignSystem/Card";
 
 // Assets
-import awsLogo from './assets/aws-logo.png';
-import awsBlackLogo from './assets/aws_black_mode.png';
-import azureLogo from './assets/azure-logo.png';
-import gcpLogo from './assets/gcp-logo.png';
-import m365Logo from './assets/m365-logo.png';
-import gitCopilotLogo from './assets/gitcopilot-logo.png';
-import tensorLogo from './assets/tensor-logo.png';
+import awsLogo from "./assets/aws-logo.png";
+import awsBlackLogo from "./assets/aws_black_mode.png";
+import azureLogo from "./assets/azure-logo.png";
+import gcpLogo from "./assets/gcp-logo.png";
+import m365Logo from "./assets/m365-logo.png";
+import gitCopilotLogo from "./assets/gitcopilot-logo.png";
+import tensorLogo from "./assets/tensor-logo.png";
 
 // ----------------------------- CONFIG -----------------------------
-const BASE_URL =
-  "https://95nevlbwb2.execute-api.ap-south-1.amazonaws.com/Beta";
+const BASE_URL = "https://95nevlbwb2.execute-api.ap-south-1.amazonaws.com/Beta";
 
 const availablePlatforms = [
-  { key: "aws", name: "AWS Credentials", logo: awsLogo, darkLogo: awsBlackLogo, accessKey: 'aws_access' },
-  { key: "azure", name: "AZURE Credentials", logo: azureLogo, accessKey: 'azure_access' },
-  { key: "gcp", name: "GCP Credentials", logo: gcpLogo, accessKey: 'gcp_access' },
-  { key: "ms365", name: "MS365 Credentials", logo: m365Logo, accessKey: 'ms_access' },
-  { key: "gitcopilot", name: "GITCOPILOT Credentials", logo: gitCopilotLogo, comingSoon: true },
-  { key: "tensor", name: "TENSOR Credentials", logo: tensorLogo, comingSoon: true },
+  {
+    key: "aws",
+    name: "AWS Credentials",
+    logo: awsLogo,
+    darkLogo: awsBlackLogo,
+    accessKey: "aws_access",
+  },
+  {
+    key: "azure",
+    name: "AZURE Credentials",
+    logo: azureLogo,
+    accessKey: "azure_access",
+  },
+  {
+    key: "gcp",
+    name: "GCP Credentials",
+    logo: gcpLogo,
+    accessKey: "gcp_access",
+  },
+  {
+    key: "ms365",
+    name: "MS365 Credentials",
+    logo: m365Logo,
+    accessKey: "ms_access",
+  },
+  {
+    key: "gitcopilot",
+    name: "GITCOPILOT Credentials",
+    logo: gitCopilotLogo,
+    comingSoon: true,
+  },
+  {
+    key: "tensor",
+    name: "TENSOR Credentials",
+    logo: tensorLogo,
+    comingSoon: true,
+  },
 ];
 
 const signInUrls = {
-  aws: (accountId) => accountId ? `https://${accountId}.signin.aws.amazon.com/console` : null,
+  aws: (accountId) =>
+    accountId ? `https://${accountId}.signin.aws.amazon.com/console` : null,
   azure: "https://portal.azure.com",
   gcp: "https://console.cloud.google.com",
   ms365: "https://www.office.com",
@@ -43,25 +74,29 @@ const CloudConsole = () => {
 
   const { theme, toggleTheme } = useTheme();
 
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [vmInfo, setVmInfo] = useState("");
   const [accountId, setAccountId] = useState(null);
   const [apiLoading, setApiLoading] = useState(false);
 
   // Toast state
-  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
-  const showToast = useCallback((message, type = 'success') => {
+  const showToast = useCallback((message, type = "success") => {
     setToast({ show: true, message, type });
-    setTimeout(() => setToast(prev => ({ ...prev, show: false })), 4000);
+    setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 4000);
   }, []);
 
   useEffect(() => {
     const getToken = async () => {
       try {
         const session = await fetchAuthSession();
-        setToken(session.tokens?.idToken?.toString() || '');
+        setToken(session.tokens?.idToken?.toString() || "");
       } catch (err) {
         console.error("Failed to fetch auth session", err);
       }
@@ -91,12 +126,12 @@ const CloudConsole = () => {
       } else if (platform === "azure") {
         response = await fetch(
           `https://95nevlbwb2.execute-api.ap-south-1.amazonaws.com/Beta/AzureCreds?username=${username}`,
-          { method: "GET" }
+          { method: "GET" },
         );
       } else if (platform === "ms365") {
         response = await fetch(
           `https://95nevlbwb2.execute-api.ap-south-1.amazonaws.com/Beta/AzureCreds?username=${username}`,
-          { method: "GET" }
+          { method: "GET" },
         );
       } else if (platform === "gcp") {
         response = await fetch(
@@ -107,19 +142,24 @@ const CloudConsole = () => {
               Authorization: `Bearer ${process.env.GCP_TOKEN || ""}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ queryStringParameters: { username: username } }),
-          }
+            body: JSON.stringify({
+              queryStringParameters: { username: username },
+            }),
+          },
         );
       } else {
-        throw new Error(`Unsupported or coming soon: ${platform.toUpperCase()}`);
+        throw new Error(
+          `Unsupported or coming soon: ${platform.toUpperCase()}`,
+        );
       }
 
-      if (!response.ok) throw new Error(`Access denied or error for ${platform.toUpperCase()}`);
+      if (!response.ok)
+        throw new Error(`Access denied or error for ${platform.toUpperCase()}`);
 
       data = await response.json();
 
       // Handle API Gateway proxy-style responses where body is a stringified JSON
-      if (data.body && typeof data.body === 'string') {
+      if (data.body && typeof data.body === "string") {
         try {
           data = JSON.parse(data.body);
         } catch (e) {
@@ -138,14 +178,22 @@ const CloudConsole = () => {
             `Access Key: ${data.access_key_id || "N/A"}`,
             `Secret Key: ${data.secret_access_key || "N/A"}`,
           ].join("\n");
-          signInUrl = data.account_number ? signInUrls.aws(data.account_number) : null;
+          signInUrl = data.account_number
+            ? signInUrls.aws(data.account_number)
+            : null;
           break;
         case "azure":
-          credentials = [`Email: ${data.Email || "N/A"}`, `Password: ${data.Pass || "N/A"}`].join("\n");
+          credentials = [
+            `Email: ${data.Email || "N/A"}`,
+            `Password: ${data.Pass || "N/A"}`,
+          ].join("\n");
           signInUrl = signInUrls.azure;
           break;
         case "ms365":
-          credentials = [`Email: ${data.Email || "N/A"}`, `Password: ${data.Pass || "N/A"}`].join("\n");
+          credentials = [
+            `Email: ${data.Email || "N/A"}`,
+            `Password: ${data.Pass || "N/A"}`,
+          ].join("\n");
           signInUrl = signInUrls.ms365;
           break;
         case "gcp":
@@ -162,7 +210,10 @@ const CloudConsole = () => {
 
       setVmInfo(credentials);
       setAccountId(signInUrl);
-      showToast(`Fetched ${platform.toUpperCase()} credentials successfully`, 'success');
+      showToast(
+        `Fetched ${platform.toUpperCase()} credentials successfully`,
+        "success",
+      );
     } catch (error) {
       setVmInfo(`Error: You don't have access to ${platform.toUpperCase()} `);
       showToast(error.message, "error");
@@ -193,7 +244,7 @@ const CloudConsole = () => {
 
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text);
-    showToast("Copied to clipboard!", 'success');
+    showToast("Copied to clipboard!", "success");
   };
 
   if (authLoading) {
@@ -215,7 +266,9 @@ const CloudConsole = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
               {availablePlatforms.map((platform) => {
                 const isDisabled = platform.comingSoon;
-                const textColor = isDisabled ? 'text-gray-400 dark:text-gray-600' : 'text-gray-900 dark:text-white';
+                const textColor = isDisabled
+                  ? "text-gray-400 dark:text-gray-600"
+                  : "text-gray-900 dark:text-white";
 
                 return (
                   <motion.div
@@ -227,7 +280,7 @@ const CloudConsole = () => {
                   >
                     <Card
                       hoverEffect={!isDisabled}
-                      className={`h-[220px] flex flex-col justify-center items-center ${isDisabled ? 'cursor-not-allowed grayscale opacity-60' : ''}`}
+                      className={`h-[220px] flex flex-col justify-center items-center ${isDisabled ? "cursor-not-allowed grayscale opacity-60" : ""}`}
                     >
                       <div className="flex flex-col items-center justify-center h-full">
                         {platform.darkLogo ? (
@@ -251,7 +304,9 @@ const CloudConsole = () => {
                           />
                         )}
 
-                        <h3 className={`text-lg font-bold mb-2 text-center transition-colors duration-300 ${!isDisabled ? 'group-hover:text-brand-accent' : ''} ${textColor}`}>
+                        <h3
+                          className={`text-lg font-bold mb-2 text-center transition-colors duration-300 ${!isDisabled ? "group-hover:text-brand-accent" : ""} ${textColor}`}
+                        >
                           {platform.name}
                         </h3>
                         {platform.comingSoon && (
@@ -328,19 +383,29 @@ const CloudConsole = () => {
                       onClick={handleBackToPlatforms}
                       className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-xl text-gray-400 hover:text-brand-accent transition-all active:scale-95"
                     >
-                      <span className="material-symbols-outlined text-2xl">close</span>
+                      <span className="material-symbols-outlined text-2xl">
+                        close
+                      </span>
                     </button>
                   </div>
 
                   {/* Body */}
-                  {selectedPlatform.accessKey && accessFlags && !accessFlags[selectedPlatform.accessKey] ? (
+                  {selectedPlatform.accessKey &&
+                  accessFlags &&
+                  !accessFlags[selectedPlatform.accessKey] ? (
                     <div className="p-10 bg-red-50 dark:bg-red-900/10 rounded-3xl border border-red-100 dark:border-red-900/20 text-center flex flex-col items-center justify-center min-h-[250px]">
                       <div className="w-16 h-16 bg-red-500/10 rounded-2xl flex items-center justify-center mb-4">
-                        <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-4xl">lock</span>
+                        <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-4xl">
+                          lock
+                        </span>
                       </div>
-                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Access Denied</h3>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+                        Access Denied
+                      </h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400 max-w-[240px] mx-auto leading-relaxed">
-                        You do not have permission to access {selectedPlatform.name}. Please contact your administrator for access.
+                        You do not have permission to access{" "}
+                        {selectedPlatform.name}. Please contact your
+                        administrator for access.
                       </p>
                     </div>
                   ) : apiLoading ? (
@@ -351,38 +416,50 @@ const CloudConsole = () => {
                     <div className="space-y-6">
                       {vmInfo && vmInfo.startsWith("Error:") ? (
                         <div className="p-6 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/20 text-center">
-                          <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-3xl mb-2">error</span>
-                          <p className="text-sm text-red-600 dark:text-red-400 font-semibold">{vmInfo.replace("Error: ", "")}</p>
+                          <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-3xl mb-2">
+                            error
+                          </span>
+                          <p className="text-sm text-red-600 dark:text-red-400 font-semibold">
+                            {vmInfo.replace("Error: ", "")}
+                          </p>
                         </div>
                       ) : (
                         <div className="space-y-5">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {vmInfo && vmInfo.split("\n").map((line, idx) => {
-                              const parts = line.split(": ");
-                              const label = parts[0];
-                              const value = parts.slice(1).join(": ");
-                              if (!value) return null;
+                            {vmInfo &&
+                              vmInfo.split("\n").map((line, idx) => {
+                                const parts = line.split(": ");
+                                const label = parts[0];
+                                const value = parts.slice(1).join(": ");
+                                if (!value) return null;
 
-                              return (
-                                <div key={idx} className="space-y-1.5 group/field">
-                                  <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest pl-1">
-                                    {label}
-                                  </label>
-                                  <div className="relative group/copy">
-                                    <div className="w-full pl-4 pr-10 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center justify-between group-hover/field:border-brand-accent/30 transition-all">
-                                      <span className="font-mono text-xs font-medium text-gray-900 dark:text-white truncate select-all">{value}</span>
-                                      <button
-                                        onClick={() => handleCopy(value)}
-                                        className="absolute right-2 p-1.5 text-gray-400 hover:text-brand-accent transition-colors"
-                                        title="Copy"
-                                      >
-                                        <span className="material-symbols-outlined text-xl">content_copy</span>
-                                      </button>
+                                return (
+                                  <div
+                                    key={idx}
+                                    className="space-y-1.5 group/field"
+                                  >
+                                    <label className="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest pl-1">
+                                      {label}
+                                    </label>
+                                    <div className="relative group/copy">
+                                      <div className="w-full pl-4 pr-10 py-3 rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center justify-between group-hover/field:border-brand-accent/30 transition-all">
+                                        <span className="font-mono text-xs font-medium text-gray-900 dark:text-white truncate select-all">
+                                          {value}
+                                        </span>
+                                        <button
+                                          onClick={() => handleCopy(value)}
+                                          className="absolute right-2 p-1.5 text-gray-400 hover:text-brand-accent transition-colors"
+                                          title="Copy"
+                                        >
+                                          <span className="material-symbols-outlined text-xl">
+                                            content_copy
+                                          </span>
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              );
-                            })}
+                                );
+                              })}
                           </div>
 
                           {accountId && (
@@ -390,10 +467,12 @@ const CloudConsole = () => {
                               href={accountId}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="w-full py-4 bg-brand-accent hover:bg-brand-accent-hover text-white font-bold text-sm tracking-widest rounded-xl transition-all shadow-xl shadow-brand-accent/20 active:scale-[0.98] uppercase text-center flex items-center justify-center gap-3 mt-4"
+                              className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm tracking-widest rounded-xl transition-all shadow-xl shadow-brand-accent/20 active:scale-[0.98] uppercase text-center flex items-center justify-center gap-3 mt-4"
                             >
                               Open Kloud Console
-                              <span className="material-symbols-outlined text-lg">open_in_new</span>
+                              <span className="material-symbols-outlined text-lg">
+                                open_in_new
+                              </span>
                             </a>
                           )}
                         </div>
@@ -414,14 +493,24 @@ const CloudConsole = () => {
               exit={{ opacity: 0, y: 20 }}
               className="fixed bottom-6 left-0 right-0 flex justify-center pointer-events-none z-[110]"
             >
-              <div className={`
+              <div
+                className={`
                 pointer-events-auto px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border backdrop-blur-md
-                ${toast.type === 'error' ? 'bg-red-50/90 dark:bg-red-900/90 text-red-800 dark:text-white border-red-200 dark:border-red-800' :
-                  toast.type === 'info' ? 'bg-brand-accent/10 dark:bg-brand-accent/10 text-brand-accent border-brand-accent/20 dark:border-brand-accent/20' :
-                    'bg-gray-900/95 dark:bg-white/95 text-white dark:text-gray-900 border-transparent'}
-              `}>
+                ${
+                  toast.type === "error"
+                    ? "bg-red-50/90 dark:bg-red-900/90 text-red-800 dark:text-white border-red-200 dark:border-red-800"
+                    : toast.type === "info"
+                      ? "bg-brand-accent/10 dark:bg-brand-accent/10 text-brand-accent border-brand-accent/20 dark:border-brand-accent/20"
+                      : "bg-gray-900/95 dark:bg-white/95 text-white dark:text-gray-900 border-transparent"
+                }
+              `}
+              >
                 <span className="material-symbols-outlined">
-                  {toast.type === 'error' ? 'error' : toast.type === 'info' ? 'info' : 'check_circle'}
+                  {toast.type === "error"
+                    ? "error"
+                    : toast.type === "info"
+                      ? "info"
+                      : "check_circle"}
                 </span>
                 <p className="font-medium text-sm">{toast.message}</p>
               </div>

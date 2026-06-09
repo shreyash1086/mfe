@@ -92,11 +92,11 @@ const AssessmentResult = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-gray-50 dark:bg-brand-dark flex flex-col items-center justify-start p-4 pb-12 font-['Poppins',sans-serif] overflow-y-auto">
+    <div className="absolute inset-0 z-50 bg-gray-50 dark:bg-brand-dark flex flex-col items-center justify-start p-4 pb-12 font-['Poppins',sans-serif] overflow-y-auto">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl w-full my-auto bg-white dark:bg-brand-card rounded-3xl shadow-2xl border border-gray-100 dark:border-[#333]"
+        className="max-w-4xl w-full my-8 bg-white dark:bg-brand-card rounded-3xl shadow-2xl border border-gray-100 dark:border-[#333]"
       >
         {/* Header Section */}
         <div className="text-center p-12 pb-8">
